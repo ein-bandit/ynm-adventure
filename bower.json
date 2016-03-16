@@ -1,7 +1,6 @@
 {
   "name": "ynm-adventure",
   "description": "",
-  "main": "y",
   "authors": [
     "kaufi07"
   ],
@@ -11,7 +10,6 @@
   "ignore": [
     "**/.*",
     "node_modules",
-    "public/components",
     "test",
     "tests"
   ],
