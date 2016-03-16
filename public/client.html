@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="components/jquery/dist/jquery.min.js"></script>
+    <script>
+        function connect() {
+            var source = new EventSource("/events", {withCredentials: false});
+            $('#connect').css('display','none');
+            $('#wait').css('display','block');
+            source.onmessage = function (event) {
+
+                console.log(event);
+                if (event.type === 'open' || event.type === 'message') {
+                    $('#wait').css('display','none');
+
+                }
+                if (JSON.parse(event.data).votingEnabled === true) {
+                    $('#answers').css('display', 'block');
+                }
+            };
+            source.onerror = function (err) {
+                console.log(err);
+            };
+        }
+        function sendAnswer(answer) {
+            $.post('answer', {data: answer});
+            $('#answers').css('display', 'none');
+            $('#wait').css('display', 'block');
+        }
+    </script>
+</head>
+<body>
+<h1>i am the client</h1>
+
+<button id="connect" onclick="connect()">connect</button>
+<div id="answers" style="display:none">
+
+    <button onclick="sendAnswer(0)">yes</button>
+    <button onclick="sendAnswer(1)">no</button>
+    <button onclick="sendAnswer(2)">maybe</button>
+</div>
+<p style="color:red; display:none" id="wait">please wait...</p>
+</body>
+</html>

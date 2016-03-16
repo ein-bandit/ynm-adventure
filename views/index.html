@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>master</title>
+    <script src="components/jquery/dist/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $.ajaxSetup({ cache: false });
+        });
+        function startTestEvent() {
+            $.get('triggerVoting', null);
+        }
+    </script>
+</head>
+<body>
+
+<button onclick="startTestEvent()">start test event</button>
+
+</body>
+</html>
