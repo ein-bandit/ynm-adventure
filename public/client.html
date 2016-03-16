@@ -2,26 +2,38 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>community client</title>
     <script src="components/jquery/dist/jquery.min.js"></script>
     <script>
+
+        var eventCounter = 0;
         function connect() {
+
+
+            ///how to get unique id?
+
+
             var source = new EventSource("/events", {withCredentials: false});
-            $('#connect').css('display','none');
-            $('#wait').css('display','block');
+            $('#connect').css('display', 'none');
+            $('#wait').css('display', 'block');
             source.onmessage = function (event) {
 
+                var data = JSON.parse(event.data);
                 console.log(event);
-                if (event.type === 'open' || event.type === 'message') {
-                    $('#wait').css('display','none');
+                if (data.eventNr > eventCounter) {
+                    if (event.type === 'open' || event.type === 'message') {
+                        $('#wait').css('display', 'none');
 
-                }
-                if (JSON.parse(event.data).votingEnabled === true) {
-                    $('#answers').css('display', 'block');
+                    }
+                    if (data.votingEnabled === true) {
+                        $('#answers').css('display', 'block');
+                        eventCounter = data.eventNr;
+                    }
                 }
             };
             source.onerror = function (err) {
                 console.log(err);
+                $.get('/disconnect');
             };
         }
         function sendAnswer(answer) {

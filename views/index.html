@@ -2,20 +2,51 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>master</title>
+    <title>community master/server</title>
+    <link rel="stylesheet" href="components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="components/bootstrap/dist/css/bootstrap-theme.min.css">
     <script src="components/jquery/dist/jquery.min.js"></script>
+    <script src="components/bootstrap/dist/js/bootstrap.min.js"></script>
     <script>
-        $(document).ready(function() {
-            $.ajaxSetup({ cache: false });
-        });
+        $.ajaxSetup({cache: false});
+        var source = new EventSource("/updates", {withCredentials: false});
+
+        source.onmessage = function (event) {
+            var data = JSON.parse(event.data);
+            $("#nrusers").text(data.clients);
+            var sum = data.answers.yes + data.answers.no + data.answers.maybe;
+            $("#answers-yes").css("width", (Math.round((data.answers.yes / sum) * 100)) + "%");
+            $("#answers-no").css("width", (Math.round((data.answers.no / sum) * 100)) + "%");
+            $("#answers-maybe").css("width", (Math.round((data.answers.maybe / sum) * 100)) + "%");
+
+        };
         function startTestEvent() {
             $.get('triggerVoting', null);
         }
     </script>
 </head>
 <body>
-
+<div>nr users</div>
+<div id="nrusers">0</div>
+<!--<div>yes</div>
+<div id="answers-yes">0</div>
+<div>no</div>
+<div id="answers-no">0</div>
+<div>maybe</div>
+<div id="answers-maybe">0</div>-->
 <button onclick="startTestEvent()">start test event</button>
+
+<div class="progress">
+    <div class="progress-bar progress-bar-success" id="answers-yes" style="width: 33%">
+        <span class="sr-only">33% Complete (success)</span>
+    </div>
+    <div class="progress-bar progress-bar-warning" id="answers-maybe" style="width: 34%">
+        <span class="sr-only">34% Complete (danger)</span>
+    </div>
+    <div class="progress-bar progress-bar-danger" id="answers-no" style="width: 33%">
+        <span class="sr-only">33% Complete (warning)</span>
+    </div>
+</div>
 
 </body>
 </html>
