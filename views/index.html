@@ -13,11 +13,15 @@
 
         source.onmessage = function (event) {
             var data = JSON.parse(event.data);
-            $("#nrusers").text(data.clients);
-            var sum = data.answers.yes + data.answers.no + data.answers.maybe;
-            $("#answers-yes").css("width", (Math.round((data.answers.yes / sum) * 100)) + "%");
-            $("#answers-no").css("width", (Math.round((data.answers.no / sum) * 100)) + "%");
-            $("#answers-maybe").css("width", (Math.round((data.answers.maybe / sum) * 100)) + "%");
+            if (data.nextMedia) {
+                $("#video").attr("src", data.nextMedia);
+            } else {
+                $("#nrusers").text(data.clients);
+                var sum = data.answers.yes + data.answers.no + data.answers.maybe;
+                $("#answers-yes").css("width", (Math.round((data.answers.yes / sum) * 100)) + "%");
+                $("#answers-no").css("width", (Math.round((data.answers.no / sum) * 100)) + "%");
+                $("#answers-maybe").css("width", (Math.round((data.answers.maybe / sum) * 100)) + "%");
+            }
 
         };
         function startTestEvent() {
@@ -34,6 +38,10 @@
 <div id="answers-no">0</div>
 <div>maybe</div>
 <div id="answers-maybe">0</div>-->
+<div class="center">
+    <video id="video" src="" preload="auto" style="border: 1px solid black; width:480px; height:320px;"></video>
+</div>
+
 <button onclick="startTestEvent()">start test event</button>
 
 <div class="progress">

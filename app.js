@@ -25,6 +25,10 @@ var clients = 0;
 var countdown = false;
 var counter = 0;
 var usersVoted = [];
+var nextMedia = true;
+var mediaCounter = 0;
+
+var mediaLinks = [];
 
 var currentAnswers = {
     yes: 0,
@@ -72,7 +76,12 @@ app.get('/updates', function (req, res) {
     });
 
     setInterval(function () {
-        console.log('writing');
+        //console.log('writing to index');
+        if (nextMedia === true) {
+            res.write("data: { \"nextMedia\" : \"" +mediaLinks[mediaCounter]+ "\"}");
+            mediaCounter++;
+            nextMedia = false;
+        }
         res.write("data: { \"clients\" : " + clients + ", \"answers\" : " + JSON.stringify(currentAnswers) + " }\n\n");
     }, 5000);
 });
@@ -85,13 +94,12 @@ app.get('/events', function (req, res) {
         'Content-Type': 'text/event-stream',
         'Cache-Control': 'no-cache'
     });
-    console.log('a client has connected');
-    console.log(req.headers);
+    //console.log('a client has connected');
     clients += 1;
     setInterval(function () {
         //while voting is enabled.
         if (sendEvent === true) {
-            console.log('sending event');
+            //console.log('sending event');
             res.write("data: { \"votingEnabled\": true, \"eventNr\" : " + eventCounter + "}\n\n");
             usersVoted.push();
         }
@@ -103,6 +111,7 @@ setInterval(function () {
         counter--;
         if (counter == 0) {
             sendEvent = false;
+            nextMedia = true;
         }
     }
 }, 1000);
@@ -111,7 +120,7 @@ setInterval(function () {
 app.post('/answer', function (req, res) {
     console.log(req.body.data);
     var answer = req.body.data;
-    console.log('received answer: ' + answer);
+    //console.log('received answer: ' + answer);
     switch (parseInt(answer)) {
         case 0:
             currentAnswers.yes += 1;
@@ -126,7 +135,7 @@ app.post('/answer', function (req, res) {
             console.log("no valid answer");
             break;
     }
-    console.log(currentAnswers);
+    //console.log(currentAnswers);
     //data (with answers) is written periodically to index.
     res.sendStatus(200);
 });
