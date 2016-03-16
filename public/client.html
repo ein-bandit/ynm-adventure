@@ -5,6 +5,7 @@
     <title>community client</title>
     <script src="components/jquery/dist/jquery.min.js"></script>
     <script>
+        if (!!window.EventSource) {
 
         var eventCounter = 0;
         function connect() {
@@ -40,6 +41,10 @@
             $.post('answer', {data: answer});
             $('#answers').css('display', 'none');
             $('#wait').css('display', 'block');
+        }
+
+        } else {
+            alert("Sorry, your browser does not work with this app. (EventSource not available)");
         }
     </script>
 </head>
