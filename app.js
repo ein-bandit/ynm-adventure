@@ -78,7 +78,7 @@ app.get('/updates', function (req, res) {
     setInterval(function () {
         //console.log('writing to index');
         if (nextMedia === true) {
-            res.write("data: { \"nextMedia\" : \"" +mediaLinks[mediaCounter]+ "\"}");
+            res.write("data: { \"nextMedia\" : \"" + JSON.stringify(mediaLinks[mediaCounter]) + "\"}");
             mediaCounter++;
             nextMedia = false;
         }
