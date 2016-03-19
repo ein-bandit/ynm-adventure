@@ -44,6 +44,10 @@ app.get('/index', function (req, res) {
     res.sendFile(path.join(__dirname, '/views', 'index.html'));
 });
 
+app.get('/game', function (req, res) {
+    res.sendFile(path.join(__dirname, '/views', 'game.html'));
+});
+
 app.get('/disconnect', function (req, res) {
     clients--;
     res.sendStatus(200);

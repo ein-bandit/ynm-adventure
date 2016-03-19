@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>community master/server</title>
+    <link rel="stylesheet" href="components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="components/bootstrap/dist/css/bootstrap-theme.min.css">
+    <script src="components/jquery/dist/jquery.min.js"></script>
+    <script src="components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script>
+        $.ajaxSetup({cache: false});
+
+        var search = window.location.search;
+        var source = new EventSource("/updates", {withCredentials: false});
+
+
+        var mediaCounter = parseInt(search.split("=")[1]);
+
+        var mediaData = ["video1.mp4", "video2.mp4"];
+
+        source.onmessage = function (event) {
+            var data = JSON.parse(event.data);
+
+            $("#nrconnections").text(data.clients);
+            var sumAnswers = data.answers.yes + data.answers.no;
+            $("#answers-yes").css("width", (Math.round((data.answers.yes / sumAnswers) * 100)) + "%");
+            $("#answers-no").css("width", (Math.round((data.answers.no / sumAnswers) * 100)) + "%");
+            $("#answers-yes").text(data.answers.yes);
+            $("#answers-no").text(data.answers.no);
+
+
+        };
+        function startTestEvent() {
+            $.post('triggerVoting', {data: {
+                mediaCounter : mediaCounter++,
+                votingTime : 10
+            }});
+        }
+        function startVideo() {
+            $("#video").attr("src", "/videos?video="+mediaData[mediaCounter]);
+            $("#video").load();
+            $("#video").get(0).play();
+            $("video").bind("ended", function() {
+                if (mediaCounter < mediaData.length - 1) {
+                    mediaCounter++;
+                    startVideo();
+                }
+            });
+
+        }
+    </script>
+</head>
+<body>
+<div>nr connections</div>
+<div id="nrconnections">0</div>
+<div class="center">
+    <video id="video" src="" preload="auto" style="border: 1px solid black; width:480px; height:320px;"></video>
+</div>
+
+<button onclick="startTestEvent()">start test event</button>
+<button onclick="startVideo()">start video chain</button>
+
+<div class="progress">
+    <div class="progress-bar progress-bar-success" id="answers-yes" style="width: 50%">
+        <span class="sr-only">50% Complete (success)</span>
+    </div>
+    <div class="progress-bar progress-bar-danger" id="answers-no" style="width: 50%">
+        <span class="sr-only">50% Complete (warning)</span>
+    </div>
+</div>
+
+</body>
+</html>
