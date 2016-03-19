@@ -7,17 +7,29 @@
     <script src="components/jquery/dist/jquery.min.js"></script>
     <script>
         $(document).ready(function () {
-            $("#customStartingPoint").change(function () {
-                $("#gameLink").attr("href", "/game?customStartingPoint=" + $("#customStartingPoint").val());
+            var search = window.location.search;
+            $("#startingPoint,#achievedPoints").change(function () {
+                $("#gameLink").attr("href", "/game?startingPoint=" + $("#startingPoint").val()
+                        + "&achievedPoints=" + $("#achievedPoints").val());
             });
+
+            if (search.indexOf("?debug") != -1) {
+                $("#debug").css("display", "block");
+            }
         });
+
     </script>
 </head>
 <body>
-<label>custom starting point</label>
-<input id="customStartingPoint" value="0" type="number">
-<br />
-<a id="gameLink" href="/game?customStartingPoint=0">
+<div id="debug" style="display: none">
+    <label>custom starting point</label>
+    <input id="startingPoint" value="0" type="number">
+    <br/>
+    <label>achieved points</label>
+    <input id="achievedPoints" value="0" type="number">
+    <br/>
+</div>
+<a id="gameLink" href="/game?startingPoint=0&achievedPoints=0">
     <button>startGame</button>
 </a>
 

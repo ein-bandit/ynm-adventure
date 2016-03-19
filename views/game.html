@@ -11,10 +11,17 @@
         $.ajaxSetup({cache: false});
 
         var search = window.location.search;
+        search = search.split("&");
+        var param1 = search[1].split("=");
+        var param2 = search[1].split("=");
+        param1 = parseInt(param1[1]);
+        param2 = parseInt(param2[1]);
         var source = new EventSource("/updates", {withCredentials: false});
 
-
-        var mediaCounter = parseInt(search.split("=")[1]);
+        if (param1 > 0 || param2 > 0) {
+            var mediaCounter = param1;
+            var points = param2;
+        }
 
         var mediaData = ["video1.mp4", "video2.mp4"];
 
@@ -40,7 +47,7 @@
             $("#videoSource").attr("src", "/videos?video="+mediaData[mediaCounter]);
             $("#video").load();
             $("#video").get(0).play();
-            $("video").bind("ended", function() {
+            $("#video").bind("ended", function() {
                 if (mediaCounter < mediaData.length - 1) {
                     mediaCounter++;
                     startVideo();
