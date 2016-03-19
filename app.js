@@ -19,27 +19,22 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-var sendEvent = false;
+var sendEventData = {
+    enabled: false,
+    votingTime: 30
+};
 var eventCounter = 0;
 var clients = 0;
-var countdown = false;
-var counter = 0;
 var usersVoted = [];
-var nextMedia = true;
-var mediaCounter = 0;
-
-var mediaLinks = [];
 
 var currentAnswers = {
     yes: 0,
-    no: 0,
-    maybe: 0
+    no: 0
 };
 
 function resetCurrentAnswers() {
     currentAnswers.yes = 0;
     currentAnswers.no = 0;
-    currentAnswers.maybe = 0;
 }
 
 
@@ -57,11 +52,18 @@ app.get('/client', function (req, res) {
     res.sendFile(path.join(__dirname, '/public', 'client.html'));
 });
 
-app.get('/triggerVoting', function (req, res) {
+app.get('/videos', function(req,res) {
+    var video = req.query.video;
+    res.sendFile(path.join(__dirname, '/public/videos/' + video));
+});
+
+app.post('/triggerVoting', function (req, res) {
     resetCurrentAnswers();
     usersVoted = [];
-    sendEvent = true;
-    countdown = true;
+    var data = req.body;
+    console.log(data);
+    sendEventData.enabled = true;
+    sendEventData.votingTime = parseInt(data.votingTime) || 10;
     eventCounter += 1;
     //res.setHeader('Cache-Control','no-cache');
     res.sendStatus(200);
@@ -77,11 +79,6 @@ app.get('/updates', function (req, res) {
 
     setInterval(function () {
         //console.log('writing to index');
-        if (nextMedia === true) {
-            res.write("data: { \"nextMedia\" : \"" + JSON.stringify(mediaLinks[mediaCounter]) + "\"}");
-            mediaCounter++;
-            nextMedia = false;
-        }
         res.write("data: { \"clients\" : " + clients + ", \"answers\" : " + JSON.stringify(currentAnswers) + " }\n\n");
     }, 5000);
 });
@@ -98,23 +95,13 @@ app.get('/events', function (req, res) {
     clients += 1;
     setInterval(function () {
         //while voting is enabled.
-        if (sendEvent === true) {
+        if (sendEventData.enabled === true) {
             //console.log('sending event');
-            res.write("data: { \"votingEnabled\": true, \"eventNr\" : " + eventCounter + "}\n\n");
+            res.write("data: { \"votingEnabled\": true, \"eventNr\" : " + eventCounter + ", \"votingTime\":"+JSON.stringify(sendEventData.votingTime)+"}\n\n");
             usersVoted.push();
         }
-    }, 5000);
+    }, 1000);
 });
-
-setInterval(function () {
-    if (countdown === true && counter > 0) {
-        counter--;
-        if (counter == 0) {
-            sendEvent = false;
-            nextMedia = true;
-        }
-    }
-}, 1000);
 
 
 app.post('/answer', function (req, res) {
@@ -127,9 +114,6 @@ app.post('/answer', function (req, res) {
             break;
         case 1:
             currentAnswers.no += 1;
-            break;
-        case 2:
-            currentAnswers.maybe += 1;
             break;
         default:
             console.log("no valid answer");

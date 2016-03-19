@@ -8,6 +8,7 @@
         if (!!window.EventSource) {
 
         var eventCounter = 0;
+        var votingTime = 10;
         function connect() {
 
 
@@ -24,11 +25,12 @@
                 if (data.eventNr > eventCounter) {
                     if (event.type === 'open' || event.type === 'message') {
                         $('#wait').css('display', 'none');
-
                     }
                     if (data.votingEnabled === true) {
                         $('#answers').css('display', 'block');
                         eventCounter = data.eventNr;
+                        startVoting(data.votingTime);
+
                     }
                 }
             };
@@ -37,14 +39,25 @@
                 $.get('/disconnect');
             };
         }
+
+        } else {
+            alert("Sorry, your browser does not work with this app. (EventSource not available)");
+        }
         function sendAnswer(answer) {
             $.post('answer', {data: answer});
             $('#answers').css('display', 'none');
             $('#wait').css('display', 'block');
         }
-
-        } else {
-            alert("Sorry, your browser does not work with this app. (EventSource not available)");
+        function startVoting(time) {
+            var counter = 0;
+            var interval = setInterval(function() {
+                counter++;
+                if (counter == time) {
+                    $('#wait').css('display', 'block');
+                    $('#answers').css('display', 'none');
+                    clearInterval(interval);
+                }
+            }, 1000);
         }
     </script>
 </head>
@@ -56,7 +69,6 @@
 
     <button onclick="sendAnswer(0)">yes</button>
     <button onclick="sendAnswer(1)">no</button>
-    <button onclick="sendAnswer(2)">maybe</button>
 </div>
 <p style="color:red; display:none" id="wait">please wait...</p>
 </body>
