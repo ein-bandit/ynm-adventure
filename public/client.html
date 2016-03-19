@@ -7,38 +7,37 @@
     <script>
         if (!!window.EventSource) {
 
-        var eventCounter = 0;
-        var votingTime = 10;
-        function connect() {
+            var eventCounter = 0;
 
+            function connect() {
 
-            ///how to get unique id?
+                var source = new EventSource("/events", {withCredentials: false});
+                $('#connect').css('display', 'none');
+                $('#wait').css('display', 'block');
 
-
-            var source = new EventSource("/events", {withCredentials: false});
-            $('#connect').css('display', 'none');
-            $('#wait').css('display', 'block');
-            source.onmessage = function (event) {
-
-                var data = JSON.parse(event.data);
-                console.log(event);
-                if (data.eventNr > eventCounter) {
-                    if (event.type === 'open' || event.type === 'message') {
-                        $('#wait').css('display', 'none');
-                    }
-                    if (data.votingEnabled === true) {
+                source.onmessage = function (event) {
+                    console.log("a new voting arrived!");
+                    var data = JSON.parse(event.data);
+                    console.log(event);
+                    if (data.eventNr > eventCounter) {
+                        if (event.type === 'open' || event.type === 'message') {
+                            $('#wait').css('display', 'none');
+                        }
+                        //disabled because server interval stops after timeout
+                        //if (data.votingEnabled === true) {
                         $('#answers').css('display', 'block');
                         eventCounter = data.eventNr;
                         startVoting(data.votingTime);
-
+                        //}
                     }
-                }
-            };
-            source.onerror = function (err) {
-                console.log(err);
-                $.get('/disconnect');
-            };
-        }
+                };
+                source.onerror = function (err) {
+                    console.log(err);
+                    $.get('/disconnect').then(function () {
+                        $('#connect').css('display', 'block');
+                    });
+                };
+            }
 
         } else {
             alert("Sorry, your browser does not work with this app. (EventSource not available)");
@@ -47,12 +46,14 @@
             $.post('answer', {data: answer});
             $('#answers').css('display', 'none');
             $('#wait').css('display', 'block');
+            timeCounter = 0;
         }
+        var timeCounter;
         function startVoting(time) {
-            var counter = 0;
-            var interval = setInterval(function() {
-                counter++;
-                if (counter == time) {
+            timeCounter = 0;
+            var interval = setInterval(function () {
+                timeCounter++;
+                if (timeCounter == time) {
                     $('#wait').css('display', 'block');
                     $('#answers').css('display', 'none');
                     clearInterval(interval);

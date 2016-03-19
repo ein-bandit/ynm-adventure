@@ -23,9 +23,9 @@ var sendEventData = {
     enabled: false,
     votingTime: 30
 };
+var sendEndEvent = false;
 var eventCounter = 0;
 var clients = 0;
-var usersVoted = [];
 
 var currentAnswers = {
     yes: 0,
@@ -48,6 +48,10 @@ app.get('/game', function (req, res) {
     res.sendFile(path.join(__dirname, '/views', 'game.html'));
 });
 
+app.get('/data', function(req, res) {
+    res.sendFile(path.join(__dirname, '/public', 'data.json'));
+});
+
 app.get('/disconnect', function (req, res) {
     clients--;
     res.sendStatus(200);
@@ -58,18 +62,35 @@ app.get('/client', function (req, res) {
 
 app.get('/videos', function(req,res) {
     var video = req.query.video;
-    res.sendFile(path.join(__dirname, '/public/videos/' + video));
+    console.log("fetching video " + video );
+    res.sendFile(path.join(__dirname, '/public/videos/' + video + ".mp4"));
 });
 
 app.post('/triggerVoting', function (req, res) {
     resetCurrentAnswers();
-    usersVoted = [];
-    var data = req.body;
-    console.log(data);
+    console.log(req.body);
+    var votingTime = parseInt(req.body['votingTime']);
+
     sendEventData.enabled = true;
-    sendEventData.votingTime = parseInt(data.votingTime) || 10;
-    eventCounter += 1;
+    sendEventData.votingTime = votingTime || 10;
+    eventCounter = parseInt(req.body['mediaCounter']);
+    console.log("starting voting");
     //res.setHeader('Cache-Control','no-cache');
+
+
+    //start timer voting time + 5
+    var timer = votingTime;
+    console.log("inital timer value: " + timer);
+    var voteInterval = setInterval(function() {
+        console.log("timer value: " + timer);
+        if (timer == 0) {
+            sendEventData.enabled = false;
+            sendEndEvent = true;
+            console.log("voting time finished");
+            clearInterval(voteInterval);
+        }
+        timer--;
+    }, (1000));
     res.sendStatus(200);
 });
 
@@ -82,9 +103,18 @@ app.get('/updates', function (req, res) {
     });
 
     setInterval(function () {
-        //console.log('writing to index');
-        res.write("data: { \"clients\" : " + clients + ", \"answers\" : " + JSON.stringify(currentAnswers) + " }\n\n");
-    }, 5000);
+        if (sendEventData.enabled === true) {
+            console.log("send data to index");
+            res.write("event: vote\n");
+            res.write("data: { \"clients\" : " + clients + ", \"answers\" : " + JSON.stringify(currentAnswers) + " }\n\n");
+        }
+        if (sendEndEvent === true){
+            console.log("end voting");
+            sendEndEvent = false;
+            res.write("event: end\n");
+            res.write("data: {} \n\n");
+        }
+    }, 3000);
 });
 
 ////client functions
@@ -97,12 +127,12 @@ app.get('/events', function (req, res) {
     });
     //console.log('a client has connected');
     clients += 1;
+    //is this needed as loop that everyone gets the message?
     setInterval(function () {
         //while voting is enabled.
         if (sendEventData.enabled === true) {
             //console.log('sending event');
-            res.write("data: { \"votingEnabled\": true, \"eventNr\" : " + eventCounter + ", \"votingTime\":"+JSON.stringify(sendEventData.votingTime)+"}\n\n");
-            usersVoted.push();
+            res.write("data: { \"eventNr\" : " + eventCounter + ", \"votingTime\":"+JSON.stringify(sendEventData.votingTime)+"}\n\n");
         }
     }, 1000);
 });

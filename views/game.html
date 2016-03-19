@@ -16,17 +16,33 @@
         var param2 = search[1].split("=");
         param1 = parseInt(param1[1]);
         param2 = parseInt(param2[1]);
+
         var source = new EventSource("/updates", {withCredentials: false});
 
-        if (param1 > 0 || param2 > 0) {
-            var mediaCounter = param1;
+        //mediacounter is passed to client, so only for current event can be voted.
+        var mediaCounter = 0;
+        var gameData = null;
+        var currentStateId = "";
+
+        var _sympathy = 0;
+
+        if (param1.lenght > 0 || param2 > 0) {
+            var currentStateId = param1;
             var points = param2;
         }
 
-        var mediaData = ["video1.mp4", "video2.mp4"];
+        $.get("/data").then(function (data) {
+            gameData = data;
+            console.log(gameData);
+            currentStateId = gameData.start;
+            doGameLoop();
+        });
 
-        source.onmessage = function (event) {
+
+        source.addEventListener("vote", function (event) {
             var data = JSON.parse(event.data);
+
+            //console.log("received voting");
 
             $("#nrconnections").text(data.clients);
             var sumAnswers = data.answers.yes + data.answers.no;
@@ -34,26 +50,64 @@
             $("#answers-no").css("width", (Math.round((data.answers.no / sumAnswers) * 100)) + "%");
             $("#answers-yes").text(data.answers.yes);
             $("#answers-no").text(data.answers.no);
+        }, false);
 
 
-        };
-        function startTestEvent() {
-            $.post('triggerVoting', {data: {
-                mediaCounter : mediaCounter++,
-                votingTime : 10
-            }});
+        var voteLoopGard = false;
+        source.addEventListener("end", function (event) {
+
+            console.log("end voting");
+            $("#answers").hide();
+            var current;
+            if (parseInt($("#answers-yes").css("width")) > 65) {
+                current = gameData[currentStateId].yes;
+            } else if(parseInt($("#answers-no").css("width")) > 65) {
+                current = gameData[currentStateId].no;
+            } else {
+                current = gameData[currentStateId].maybe;
+                if (current.voteAgain === true && voteLoopGard === false) {
+                    console.log("redo voting");
+                    voteLoopGard = true;
+                    startVoting(11);
+                    $("#answers-yes").css("width", "50%");
+                    $("#answers-no").css("width", "50%");
+                    return;
+                } else {
+                    voteLoopGard = false;
+                }
+            }
+            if (current.nextMedia === "end") {
+                alert("this is the end");
+                return;
+            }
+            currentStateId = current.nextMedia;
+            _sympathy = _sympathy + current.sympathy;
+
+            $("#answers-yes").css("width", "50%");
+            $("#answers-no").css("width", "50%");
+
+            doGameLoop();
+        }, false);
+
+        function startVoting(votingTime) {
+            console.log("start voting: " + mediaCounter);
+            $.post('triggerVoting', {
+                    mediaCounter: mediaCounter++,
+                    votingTime: votingTime
+            });
+            $("#answers").show();
         }
-        function startVideo() {
-            $("#videoSource").attr("src", "/videos?video="+mediaData[mediaCounter]);
+        function doGameLoop() {
+            startNextVideo();
+        }
+        function startNextVideo() {
+            console.log("start video: " + currentStateId);
+            $("#videoSource").attr("src", "/videos?video=" + currentStateId);
             $("#video").load();
             $("#video").get(0).play();
-            $("#video").bind("ended", function() {
-                if (mediaCounter < mediaData.length - 1) {
-                    mediaCounter++;
-                    startVideo();
-                }
+            $("#video").bind("ended", function(e) {
+                startVoting(10);
             });
-
         }
     </script>
 </head>
@@ -62,14 +116,13 @@
 <div id="nrconnections">0</div>
 <div class="center">
     <video id="video" preload="auto" style="border: 1px solid black; width:480px; height:320px;">
-        <source id="videoSource" src="" type="video/mp4" />
+        <source id="videoSource" src="" type="video/mp4"/>
     </video>
 </div>
 
-<button onclick="startTestEvent()">start test event</button>
-<button onclick="startVideo()">start video chain</button>
+<button onclick="startVoting(10)">start dummy voting</button>
 
-<div class="progress">
+<div class="progress" id="answers" style="display:none">
     <div class="progress-bar progress-bar-success" id="answers-yes" style="width: 50%">
         <span class="sr-only">50% Complete (success)</span>
     </div>

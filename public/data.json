@@ -1,0 +1,50 @@
+{
+  "start":"video1",
+
+  "video1": {
+    "yes": {
+      "sympathy": 1,
+      "nextMedia": "video2"
+    },
+    "no": {
+      "sympathy": 0,
+      "nextMedia": "video2"
+    },
+    "maybe": {
+      "voteAgain": true,
+      "nextMedia": "video2",
+      "sympathy": -1
+    }
+  },
+
+  "video2": {
+    "yes": {
+      "sympathy": 1,
+      "nextMedia": "video3"
+    },
+    "no": {
+      "sympathy": 0,
+      "nextMedia": "video3"
+    },
+    "maybe": {
+      "voteAgain": true,
+      "nextMedia": "video3",
+      "sympathy": -1
+    }
+  },
+  "video3": {
+    "yes": {
+      "sympathy": 1,
+      "nextMedia": "video1"
+    },
+    "no": {
+      "sympathy": 0,
+      "nextMedia": "video1"
+    },
+    "maybe": {
+      "voteAgain": false,
+      "nextMedia": "end",
+      "sympathy": 0
+    }
+  }
+}
