@@ -37,7 +37,7 @@
             }});
         }
         function startVideo() {
-            $("#video").attr("src", "/videos?video="+mediaData[mediaCounter]);
+            $("#videoSource").attr("src", "/videos?video="+mediaData[mediaCounter]);
             $("#video").load();
             $("#video").get(0).play();
             $("video").bind("ended", function() {
@@ -54,7 +54,9 @@
 <div>nr connections</div>
 <div id="nrconnections">0</div>
 <div class="center">
-    <video id="video" src="" preload="auto" style="border: 1px solid black; width:480px; height:320px;"></video>
+    <video id="video" preload="auto" style="border: 1px solid black; width:480px; height:320px;">
+        <source id="videoSource" src="" type="video/mp4" />
+    </video>
 </div>
 
 <button onclick="startTestEvent()">start test event</button>
