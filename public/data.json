@@ -1,9 +1,25 @@
 {
-  "start":"video1",
+  "start":"f.0.0.0",
   "end": {
     "yes":["video3"],
     "no":["video2","video2"],
     "maybe":["video1"]
+  },
+
+  "f.0.0.0": {
+    "yes": {
+      "sympathy": 1,
+      "nextMedia": "video1"
+    },
+    "no": {
+      "sympathy": 0,
+      "nextMedia": "video1"
+    },
+    "maybe": {
+      "voteAgain": true,
+      "nextMedia": "video1",
+      "sympathy": -1
+    }
   },
 
   "video1": {
@@ -40,11 +56,11 @@
   "video3": {
     "yes": {
       "sympathy": 1,
-      "nextMedia": "video1"
+      "nextMedia": "end"
     },
     "no": {
       "sympathy": 0,
-      "nextMedia": "video1"
+      "nextMedia": "end"
     },
     "maybe": {
       "voteAgain": false,
