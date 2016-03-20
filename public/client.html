@@ -34,14 +34,14 @@
     <script>
         var bgs = {};
         bgs = {
-            background_active: '/images?image=background',
-            background_inactive: '/images?image=background_inactive'
+            background_active: '/images?image=client_background',
+            background_inactive: '/images?image=client_background_inactive'
         };
         $("document").ready(function () {
             $("html").css("background-image", 'url(' + bgs['background_active'] + ')');
             $("html").css("background-image", 'url(' + bgs['background_inactive'] + ')');
-            $("#btn-yes").css("background-image", 'url(/images?image=button_yes)');
-            $("#btn-no").css("background-image", 'url(/images?image=button_no)');
+            $("#btn-yes").css("background-image", 'url(/images?image=client_button_yes)');
+            $("#btn-no").css("background-image", 'url(/images?image=client_button_no)');
 
             connect();
         });
