@@ -79,7 +79,7 @@
                 }
             }
             if (current.nextMedia === "end") {
-                alert("this is the end");
+                calcAndPlayEnd();
                 return;
             }
             currentStateId = current.nextMedia;
@@ -100,16 +100,19 @@
             $("#answers").show();
         }
         function doGameLoop() {
-            startNextVideo();
+            startNextVideo(currentStateId);
         }
-        function startNextVideo() {
-            console.log("start video: " + currentStateId);
-            $("#videoSource").attr("src", "/videos?video=" + currentStateId);
+        function startNextVideo(video) {
+            console.log("start video: " + video);
+            $("#videoSource").attr("src", "/videos?video=" + video);
             $("#video").load();
             $("#video").get(0).play();
             $("#video").bind("ended", function (e) {
                 startVoting(10);
             });
+        }
+        function calcAndPlayEnd() {
+            startNextVideo(gameData['end'][_sympathy]);
         }
     </script>
 </head>
