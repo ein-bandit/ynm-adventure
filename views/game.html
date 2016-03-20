@@ -12,9 +12,9 @@
 
         var search = window.location.search;
         search = search.split("&");
-        var param1 = search[1].split("=");
+        var param1 = search[0].split("=");
         var param2 = search[1].split("=");
-        param1 = parseInt(param1[1]);
+        param1 = param1[1];
         param2 = parseInt(param2[1]);
 
         var source = new EventSource("/updates", {withCredentials: false});
@@ -26,7 +26,7 @@
 
         var _sympathy = 0;
 
-        if (param1.lenght > 0 || param2 > 0) {
+        if (param1.length > 0 || param2 > 0) {
             var currentStateId = param1;
             var points = param2;
         }
@@ -34,7 +34,9 @@
         $.get("/data").then(function (data) {
             gameData = data;
             console.log(gameData);
-            currentStateId = gameData.start;
+            if (currentStateId.length == 0) {
+                currentStateId = gameData.start;
+            }
             doGameLoop();
         });
 
@@ -61,7 +63,7 @@
             var current;
             if (parseInt($("#answers-yes").css("width")) > 65) {
                 current = gameData[currentStateId].yes;
-            } else if(parseInt($("#answers-no").css("width")) > 65) {
+            } else if (parseInt($("#answers-no").css("width")) > 65) {
                 current = gameData[currentStateId].no;
             } else {
                 current = gameData[currentStateId].maybe;
@@ -92,8 +94,8 @@
         function startVoting(votingTime) {
             console.log("start voting: " + mediaCounter);
             $.post('triggerVoting', {
-                    mediaCounter: mediaCounter++,
-                    votingTime: votingTime
+                mediaCounter: mediaCounter++,
+                votingTime: votingTime
             });
             $("#answers").show();
         }
@@ -105,7 +107,7 @@
             $("#videoSource").attr("src", "/videos?video=" + currentStateId);
             $("#video").load();
             $("#video").get(0).play();
-            $("#video").bind("ended", function(e) {
+            $("#video").bind("ended", function (e) {
                 startVoting(10);
             });
         }
