@@ -3,6 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <title>community master/server</title>
+    <style>
+        body {
+            background-image: url(/images?image=game_BG_tiled_small);
+            background-repeat: repeat;
+
+            color: white!important;
+        }
+        button {
+            color: black!important;
+        }
+        #video {
+            width:480px;
+            height:320px;
+        }
+    </style>
     <link rel="stylesheet" href="components/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="components/bootstrap/dist/css/bootstrap-theme.min.css">
     <script src="components/jquery/dist/jquery.min.js"></script>
@@ -146,7 +161,7 @@
 <div>nr connections</div>
 <div id="nrconnections">0</div>
 <div class="center">
-    <video id="video" preload="auto" style="border: 1px solid black; width:480px; height:320px;">
+    <video id="video" preload="auto">
         <source id="videoSource" src="" type="video/mp4"/>
     </video>
 </div>
