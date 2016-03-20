@@ -61,12 +61,16 @@
             console.log("end voting");
             $("#answers").hide();
             var current;
+            var finalanswer="";
             if (parseInt($("#answers-yes").css("width")) > 65) {
                 current = gameData[currentStateId].yes;
+                finalanswer = "yes";
             } else if (parseInt($("#answers-no").css("width")) > 65) {
                 current = gameData[currentStateId].no;
+                finalanswer = "no";
             } else {
                 current = gameData[currentStateId].maybe;
+                finalanswer = "maybe";
                 if (current.voteAgain === true && voteLoopGard === false) {
                     console.log("redo voting");
                     voteLoopGard = true;
@@ -79,7 +83,7 @@
                 }
             }
             if (current.nextMedia === "end") {
-                calcAndPlayEnd();
+                calcAndPlayEnd(finalanswer);
                 return;
             }
             currentStateId = current.nextMedia;
@@ -111,8 +115,18 @@
                 startVoting(10);
             });
         }
-        function calcAndPlayEnd() {
-            startNextVideo(gameData['end'][_sympathy]);
+        function calcAndPlayEnd(finalAnswer) {
+            if (finalAnswer !== "maybe") {
+                var final = gameData['end'][finalAnswer];
+            } else {
+                if (_sympathy >= 0) {
+                    final = gameData['end'][finalAnswer][0];
+                } else {
+                    final = gameData['end'][finalAnswer][1];
+                }
+            }
+
+            startNextVideo(final);
         }
     </script>
 </head>

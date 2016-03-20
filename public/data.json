@@ -47,5 +47,9 @@
       "sympathy": 0
     }
   },
-  "end": ["video3","video3"]
+  "end": {
+    "yes":["video3","video3"],
+    "no":["video2","video2"],
+    "maybe":["video1","video1"]
+  }
 }
