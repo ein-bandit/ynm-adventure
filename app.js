@@ -60,6 +60,12 @@ app.get('/client', function (req, res) {
     res.sendFile(path.join(__dirname, '/public', 'client.html'));
 });
 
+app.get('/images', function(req,res) {
+    var image = req.query.image;
+    console.log("fetching image " + image);
+    res.sendFile(path.join(__dirname, '/public/images/' + image + ".png"));
+});
+
 app.get('/videos', function(req,res) {
     var video = req.query.video;
     console.log("fetching video " + video );

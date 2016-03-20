@@ -4,16 +4,50 @@
     <meta charset="UTF-8">
     <title>community client</title>
     <script src="components/jquery/dist/jquery.min.js"></script>
+    <style>
+        #dummy {
+            padding-top: 35%;
+        }
+        #answers {
+            width:60%;
+            margin:0 auto;
+            height: 100%;
+        }
+        #btn-yes,#btn-no,#btn-dummy {
+            width: 100%;
+            height: 100%;
+            padding-bottom: 36%;
+            background-size: 100%;
+
+            cursor: pointer;
+        }
+        #btn-dummy {
+            cursor: default;
+        }
+
+    </style>
     <script>
+        var bgs = {};
+        bgs = {
+            background_active: '/images?image=background',
+            background_inactive: '/images?image=background_inactive'
+        };
+        $("document").ready(function () {
+            $("body").css("background-image", 'url(' + bgs['background_inactive'] + ')');
+            $("#btn-yes").css("background-image", 'url(/images?image=button_yes)');
+            $("#btn-no").css("background-image", 'url(/images?image=button_no)');
+        });
+
         if (!!window.EventSource) {
 
             var eventCounter = 0;
+
 
             function connect() {
 
                 var source = new EventSource("/events", {withCredentials: false});
                 $('#connect').css('display', 'none');
-                $('#wait').css('display', 'block');
+                //$('body').css('background-image', 'url(' + bgs['background_inactive'] + ')');
 
                 source.onmessage = function (event) {
                     console.log("a new voting arrived!");
@@ -21,7 +55,7 @@
                     console.log(event);
                     if (data.eventNr > eventCounter) {
                         if (event.type === 'open' || event.type === 'message') {
-                            $('#wait').css('display', 'none');
+                            $('body').css('background-image', 'url(' + bgs['background_active'] + ')');
                         }
                         //disabled because server interval stops after timeout
                         //if (data.votingEnabled === true) {
@@ -38,6 +72,7 @@
                     });
                 };
             }
+            //connect();
 
         } else {
             alert("Sorry, your browser does not work with this app. (EventSource not available)");
@@ -45,7 +80,7 @@
         function sendAnswer(answer) {
             $.post('answer', {data: answer});
             $('#answers').css('display', 'none');
-            $('#wait').css('display', 'block');
+            $('body').css('background-image', 'url(' + bgs['background_inactive'] + ')');
             timeCounter = 0;
         }
         var timeCounter;
@@ -54,7 +89,7 @@
             var interval = setInterval(function () {
                 timeCounter++;
                 if (timeCounter == time) {
-                    $('#wait').css('display', 'block');
+                    $('body').css("background-image", 'url(' + bgs['background_inactive'] + ')');
                     $('#answers').css('display', 'none');
                     clearInterval(interval);
                 }
@@ -63,14 +98,17 @@
     </script>
 </head>
 <body>
-<h1>i am the client</h1>
-
-<button id="connect" onclick="connect()">connect</button>
-<div id="answers" style="display:none">
-
-    <button onclick="sendAnswer(0)">yes</button>
-    <button onclick="sendAnswer(1)">no</button>
+<div id="dummy"></div>
+<div id="answers">
+    <a onclick="sendAnswer(0)">
+        <div id="btn-yes"></div>
+    </a>
+    <a>
+    <div id="btn-dummy"></div>
+    </a>
+    <a onclick="sendAnswer(1)">
+        <div id="btn-no"></div>
+    </a>
 </div>
-<p style="color:red; display:none" id="wait">please wait...</p>
 </body>
 </html>
