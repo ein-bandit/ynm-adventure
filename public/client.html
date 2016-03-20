@@ -12,6 +12,7 @@
             width:60%;
             margin:0 auto;
             height: 100%;
+            display:none;
         }
         #btn-yes,#btn-no,#btn-dummy {
             width: 100%;
@@ -36,6 +37,8 @@
             $("body").css("background-image", 'url(' + bgs['background_inactive'] + ')');
             $("#btn-yes").css("background-image", 'url(/images?image=button_yes)');
             $("#btn-no").css("background-image", 'url(/images?image=button_no)');
+
+            connect();
         });
 
         if (!!window.EventSource) {
@@ -72,7 +75,6 @@
                     });
                 };
             }
-            //connect();
 
         } else {
             alert("Sorry, your browser does not work with this app. (EventSource not available)");
