@@ -5,7 +5,7 @@
     <title>community client</title>
     <script src="components/jquery/dist/jquery.min.js"></script>
     <style>
-        body {
+        html {
             background-repeat: no-repeat;
             background-size: cover;
         }
@@ -38,7 +38,7 @@
             background_inactive: '/images?image=background_inactive'
         };
         $("document").ready(function () {
-            $("body").css("background-image", 'url(' + bgs['background_inactive'] + ')');
+            $("html").css("background-image", 'url(' + bgs['background_inactive'] + ')');
             $("#btn-yes").css("background-image", 'url(/images?image=button_yes)');
             $("#btn-no").css("background-image", 'url(/images?image=button_no)');
 
@@ -54,7 +54,6 @@
 
                 var source = new EventSource("/events", {withCredentials: false});
                 $('#connect').css('display', 'none');
-                //$('body').css('background-image', 'url(' + bgs['background_inactive'] + ')');
 
                 source.onmessage = function (event) {
                     console.log("a new voting arrived!");
@@ -62,7 +61,7 @@
                     console.log(event);
                     if (data.eventNr > eventCounter) {
                         if (event.type === 'open' || event.type === 'message') {
-                            $('body').css('background-image', 'url(' + bgs['background_active'] + ')');
+                            $('html').css('background-image', 'url(' + bgs['background_active'] + ')');
                         }
                         //disabled because server interval stops after timeout
                         //if (data.votingEnabled === true) {
@@ -86,7 +85,7 @@
         function sendAnswer(answer) {
             $.post('answer', {data: answer});
             $('#answers').css('display', 'none');
-            $('body').css('background-image', 'url(' + bgs['background_inactive'] + ')');
+            $('html').css('background-image', 'url(' + bgs['background_inactive'] + ')');
             timeCounter = 0;
         }
         var timeCounter;
@@ -95,7 +94,7 @@
             var interval = setInterval(function () {
                 timeCounter++;
                 if (timeCounter == time) {
-                    $('body').css("background-image", 'url(' + bgs['background_inactive'] + ')');
+                    $('html').css("background-image", 'url(' + bgs['background_inactive'] + ')');
                     $('#answers').css('display', 'none');
                     clearInterval(interval);
                 }
