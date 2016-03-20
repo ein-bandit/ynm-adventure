@@ -48,7 +48,7 @@ app.get('/game', function (req, res) {
     res.sendFile(path.join(__dirname, '/views', 'game.html'));
 });
 
-app.get('/data', function(req, res) {
+app.get('/data', function (req, res) {
     res.sendFile(path.join(__dirname, '/public', 'data.json'));
 });
 
@@ -60,15 +60,15 @@ app.get('/client', function (req, res) {
     res.sendFile(path.join(__dirname, '/public', 'client.html'));
 });
 
-app.get('/images', function(req,res) {
+app.get('/images', function (req, res) {
     var image = req.query.image;
     console.log("fetching image " + image);
     res.sendFile(path.join(__dirname, '/public/images/' + image + ".png"));
 });
 
-app.get('/videos', function(req,res) {
+app.get('/videos', function (req, res) {
     var video = req.query.video;
-    console.log("fetching video " + video );
+    console.log("fetching video " + video);
     res.sendFile(path.join(__dirname, '/public/videos/' + video + ".mp4"));
 });
 
@@ -83,44 +83,49 @@ app.post('/triggerVoting', function (req, res) {
     console.log("starting voting");
     //res.setHeader('Cache-Control','no-cache');
 
-
+    setTimeout(function () {
+        sendEventData.enabled = false;
+        sendEndEvent = true;
+        console.log("voting time finished");
+    }, votingTime * 1000);
     //start timer voting time + 5
-    var timer = votingTime;
-    console.log("inital timer value: " + timer);
-    var voteInterval = setInterval(function() {
-        console.log("timer value: " + timer);
-        if (timer == 0) {
-            sendEventData.enabled = false;
-            sendEndEvent = true;
-            console.log("voting time finished");
-            clearInterval(voteInterval);
-        }
-        timer--;
-    }, (1000));
+    /* var timer = votingTime;
+     console.log("inital timer value: " + timer);
+     var voteInterval = setInterval(function () {
+     console.log("timer value: " + timer);
+     if (timer == 0) {
+     sendEventData.enabled = false;
+     sendEndEvent = true;
+     console.log("voting time finished");
+     clearInterval(voteInterval);
+     }
+     timer--;
+     }, (1000));*/
     res.sendStatus(200);
 });
 
-
+var masterInterval;
 app.get('/updates', function (req, res) {
     res.writeHead(200, {
         'Connection': 'keep-alive',
         'Content-Type': 'text/event-stream',
         'Cache-Control': 'no-cache'
     });
-
-    setInterval(function () {
+    clearInterval(masterInterval);
+    masterInterval = setInterval(function () {
         if (sendEventData.enabled === true) {
             console.log("send data to index");
             res.write("event: vote\n");
             res.write("data: { \"clients\" : " + clients + ", \"answers\" : " + JSON.stringify(currentAnswers) + " }\n\n");
         }
-        if (sendEndEvent === true){
+        if (sendEndEvent === true) {
             console.log("end voting");
             sendEndEvent = false;
             res.write("event: end\n");
             res.write("data: {} \n\n");
         }
     }, 3000);
+
 });
 
 ////client functions
@@ -138,7 +143,7 @@ app.get('/events', function (req, res) {
         //while voting is enabled.
         if (sendEventData.enabled === true) {
             //console.log('sending event');
-            res.write("data: { \"eventNr\" : " + eventCounter + ", \"votingTime\":"+JSON.stringify(sendEventData.votingTime)+"}\n\n");
+            res.write("data: { \"eventNr\" : " + eventCounter + ", \"votingTime\":" + JSON.stringify(sendEventData.votingTime) + "}\n\n");
         }
     }, 1000);
 });

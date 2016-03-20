@@ -57,44 +57,48 @@
 
         var voteLoopGard = false;
         source.addEventListener("end", function (event) {
-
-            console.log("end voting");
+            console.log("voting ended event.");
+            $("#answers").show();
+            //blocks the process for 5 seconds and continues with evaluation -> next video.
             setTimeout(function () {
-            }, 5000);
-            $("#answers").hide();
-            var current;
-            var finalAnswer = "";
-            if (parseInt($("#answers-yes").css("width")) > 65) {
-                current = gameData[currentStateId].yes;
-                finalAnswer = "yes";
-            } else if (parseInt($("#answers-no").css("width")) > 65) {
-                current = gameData[currentStateId].no;
-                finalAnswer = "no";
-            } else {
-                current = gameData[currentStateId].maybe;
-                finalAnswer = "maybe";
-                if (current.voteAgain === true && voteLoopGard === false) {
-                    console.log("redo voting");
-                    voteLoopGard = true;
-                    startVoting(11);
-                    $("#answers-yes").css("width", "50%");
-                    $("#answers-no").css("width", "50%");
-                    return;
+
+                $("#answers").hide();
+                var current;
+                var finalAnswer = "";
+                if (parseInt($("#answers-yes").css("width")) > 65) {
+                    current = gameData[currentStateId].yes;
+                    finalAnswer = "yes";
+                } else if (parseInt($("#answers-no").css("width")) > 65) {
+                    current = gameData[currentStateId].no;
+                    finalAnswer = "no";
                 } else {
-                    voteLoopGard = false;
+                    current = gameData[currentStateId].maybe;
+                    finalAnswer = "maybe";
+                    if (current.voteAgain === true && voteLoopGard === false) {
+                        console.log("redo voting");
+                        voteLoopGard = true;
+                        startVoting(11);
+                        $("#answers-yes").css("width", "50%");
+                        $("#answers-no").css("width", "50%");
+                        return;
+                    } else {
+                        voteLoopGard = false;
+                    }
                 }
-            }
-            if (current.nextMedia === "end") {
-                calcAndPlayEnd(finalAnswer);
-                return;
-            }
-            currentStateId = current.nextMedia;
-            _sympathy = _sympathy + current.sympathy;
+                if (current.nextMedia.indexOf("end_") != -1) {
+                    calcAndPlayEnd(finalAnswer, current.nextMedia);
+                    return;
+                }
+                currentStateId = current.nextMedia;
+                _sympathy = _sympathy + current.sympathy;
 
-            $("#answers-yes").css("width", "50%");
-            $("#answers-no").css("width", "50%");
+                $("#answers-yes").css("width", "50%");
+                $("#answers-no").css("width", "50%");
 
-            doGameLoop();
+                doGameLoop();
+
+            }, 5000);
+
         }, false);
 
         function startVoting(votingTime) {
@@ -103,31 +107,38 @@
                 mediaCounter: mediaCounter++,
                 votingTime: votingTime
             });
-            $("#answers").show();
         }
         function doGameLoop() {
             startNextVideo(currentStateId);
         }
-        function startNextVideo(video) {
+        function startNextVideo(video, final) {
             console.log("start video: " + video);
             $("#videoSource").attr("src", "/videos?video=" + video);
             $("#video").load();
             $("#video").get(0).play();
-            $("#video").bind("ended", function (e) {
-                startVoting(10);
+            console.log("video started");
+            $("#video").bind("ended", function (event) {
+                console.log("video ended");
+                $('video').unbind('ended');
+                if (!final) {
+                    startVoting(10);
+                }
             });
         }
-        function calcAndPlayEnd(finalAnswer) {
-            if (finalAnswer !== "maybe") {
-                var final = gameData['end'][finalAnswer];
-            } else {
+        function calcAndPlayEnd(finalAnswer, nextMedia) {
+            var finalVideo = "";
+            if (finalAnswer === "no") {
                 if (_sympathy >= 0) {
-                    final = gameData['end'][finalAnswer][0];
+                    var temp1 = nextMedia.split(",")[0];
+                    finalVideo = temp1.substring(4, temp.length);
                 } else {
-                    final = gameData['end'][finalAnswer][1];
+                    var temp2 = nextMedia.split(",")[1];
+                    finalVideo = temp2.substring(4, temp.length);
                 }
+            } else {
+                finalVideo = nextMedia;
             }
-            startNextVideo(final);
+            startNextVideo(finalVideo, true);
         }
     </script>
 </head>
