@@ -3,7 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Tower Dungeon Community Game</title>
-
+    <style>
+        html {
+            background-image: url(/images?image=game_BG_tiled);
+            background-repeat: repeat;
+        }</style>
     <script src="components/jquery/dist/jquery.min.js"></script>
     <script>
         $(document).ready(function () {
@@ -16,6 +20,8 @@
             if (search.indexOf("?debug") != -1) {
                 $("#debug").css("display", "block");
             }
+
+
         });
 
     </script>
