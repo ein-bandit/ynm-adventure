@@ -1,5 +1,10 @@
 {
   "start":"video1",
+  "end": {
+    "yes":["video3"],
+    "no":["video2","video2"],
+    "maybe":["video1"]
+  },
 
   "video1": {
     "yes": {
@@ -46,10 +51,5 @@
       "nextMedia": "end",
       "sympathy": 0
     }
-  },
-  "end": {
-    "yes":["video3","video3"],
-    "no":["video2","video2"],
-    "maybe":["video1","video1"]
   }
 }
