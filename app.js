@@ -56,10 +56,6 @@ app.get('/client', function (req, res) {
     res.sendFile(path.join(__dirname, '/public', 'client.html'));
 });
 
-app.get('/dummy', function (req, res) {
-    res.sendStatus(200);
-});
-
 app.get('/images', function (req, res) {
     var image = req.query.image;
     console.log("fetching image " + image);
@@ -112,7 +108,7 @@ app.get('/updates', function (req, res) {
             res.write("data: {} \n\n");
         }
         if (sendEventData.enabled == false && sendEndEvent == false) {
-            //console.log("sending ping event");
+            console.log("sending ping event to index.");
             res.write("event: ping\n");
             res.write("data: {}\n\n");
         }
@@ -136,6 +132,10 @@ app.get('/events', function (req, res) {
         if (sendEventData.enabled === true) {
             //console.log('sending event');
             res.write("data: { \"eventNr\" : " + eventCounter + ", \"votingTime\":" + JSON.stringify(sendEventData.votingTime) + "}\n\n");
+        } else {
+            console.log("sending ping event to client.");
+            res.write("event: ping\n");
+            res.write("data: {}\n\n");
         }
     }, 1000);
 });
