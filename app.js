@@ -124,6 +124,11 @@ app.get('/updates', function (req, res) {
             res.write("event: end\n");
             res.write("data: {} \n\n");
         }
+        if (sendEventData.enabled == false && sendEndEvent == false) {
+            console.log("sending ping event");
+            res.write("event: ping\n");
+            res.write("data: {}\n\n");
+        }
     }, 3000);
 
 });

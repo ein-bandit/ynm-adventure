@@ -55,6 +55,9 @@
             doGameLoop();
         });
 
+        source.addEventListener("ping", function(event) {
+            console.log("ping event received");
+        });
 
         source.addEventListener("vote", function (event) {
             var data = JSON.parse(event.data);
