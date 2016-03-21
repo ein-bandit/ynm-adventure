@@ -8,14 +8,16 @@
             background-image: url(/images?image=game_BG_tiled_small);
             background-repeat: repeat;
 
-            color: white!important;
+            color: white !important;
         }
+
         button {
-            color: black!important;
+            color: black !important;
         }
+
         #video {
-            width:1024px;
-            height:576px;
+            width: 1024px;
+            height: 576px;
         }
     </style>
     <link rel="stylesheet" href="components/bootstrap/dist/css/bootstrap.min.css">
@@ -58,7 +60,7 @@
             doGameLoop();
         });
 
-        source.addEventListener("ping", function(event) {
+        source.addEventListener("ping", function (event) {
             console.log("ping event received");
         });
 
@@ -75,7 +77,7 @@
             $("#answers-no").text(data.answers.no);
 
             $("#answers").show();
-            $("#voting").hide();
+            //$("#voting").hide();
             //blocks the process for 5 seconds and continues with evaluation -> next video.
             setTimeout(function () {
 
@@ -124,7 +126,7 @@
                 mediaCounter: mediaCounter++,
                 votingTime: votingTime
             });
-            $("#voting").show()
+            //$("#voting").show()
         }
         function doGameLoop() {
             startNextVideo(currentStateId);
@@ -157,19 +159,22 @@
             } else {
                 finalVideo = nextMedia.substring(4, nextMedia.length);
             }
+            console.log("showing final video");
             startNextVideo(finalVideo, true);
         }
     </script>
 </head>
 <body>
 <div id="voting" style="display:none">voting started!</div>
-<div class="center">
-    <video id="video" preload="auto">
-        <source id="videoSource" src="" type="video/mp4"/>
-    </video>
+<div style="width:1024px; margin:0 auto;">
+    <div style="height:820px; vertical-align: middle; display:table-cell">
+        <video id="video" preload="auto">
+            <source id="videoSource" src="" type="video/mp4"/>
+        </video>
+    </div>
 </div>
 
-<div class="progress" id="answers" style="display:none">
+<div class="progress" id="answers" style="display:none; width:1024px; margin:0 auto; padding-top:-20%">
     <div class="progress-bar progress-bar-success" id="answers-yes" style="width: 50%">
         <span class="sr-only">50% Complete (success)</span>
     </div>

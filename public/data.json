@@ -2,66 +2,1026 @@
   "start":"f0.0.0",
 
   "f0.0.0": {
-    "yes": {
-      "sympathy": 1,
-      "nextMedia": "video1"
-    },
     "no": {
+      "sympathy": -1,
+      "nextMedia": "f1.0.0"
+    },
+    "yes": {
       "sympathy": 0,
-      "nextMedia": "video1"
+      "nextMedia": "f1.0.1"
     },
     "maybe": {
       "voteAgain": true,
-      "nextMedia": "video1",
+      "nextMedia": "f1.0.2",
       "sympathy": -1
     }
   },
 
-  "video1": {
-    "yes": {
-      "sympathy": 1,
-      "nextMedia": "video2"
-    },
+  "f1.0.0": {
     "no": {
       "sympathy": 0,
-      "nextMedia": "video2"
+      "nextMedia": "f2.0.0"
+    },
+    "yes": {
+      "sympathy": -1,
+      "nextMedia": "f2.0.1"
     },
     "maybe": {
       "voteAgain": true,
-      "nextMedia": "video2",
+      "nextMedia": "f2.0.2",
+      "Sympathy": -1
+    }
+  },
+
+  "f1.0.1": {
+    "no": {
+      "sympathy": -1,
+      "nextMedia": "f2.0.0"
+    },
+    "yes": {
+      "sympathy": 0,
+      "nextMedia": "f2.0.1"
+    },
+    "maybe": {
+      "voteAgain": true,
+      "nextMedia": "f2.0.2",
       "sympathy": -1
     }
   },
 
-  "video2": {
-    "yes": {
-      "sympathy": 1,
-      "nextMedia": "video3"
-    },
+  "f1.0.2": {
     "no": {
+      "sympathy": -1,
+      "nextMedia": "f1.0.0"
+    },
+    "yes": {
       "sympathy": 0,
-      "nextMedia": "video3"
+      "nextMedia": "f1.0.1"
     },
     "maybe": {
       "voteAgain": true,
-      "nextMedia": "video3",
+      "nextMedia": "f1.0.2",
       "sympathy": -1
     }
   },
 
-  "video3": {
-    "yes": {
-      "sympathy": 1,
-      "nextMedia": "end_video4"
-    },
+  "f2.0.0": {
     "no": {
       "sympathy": 0,
-      "nextMedia": "end_video3,end_video1"
+      "nextMedia": "f3.0.0"
+    },
+    "yes": {
+      "sympathy": 0,
+      "nextMedia": "f3.0.1"
+    },
+    "maybe": {
+      "voteAgain": true,
+      "nextMedia": "f2.0.2",
+      "sympathy": -1
+    }
+  },
+
+  "f2.0.1": {
+    "no": {
+      "sympathy": 0,
+      "nextMedia": "f3.0.0"
+    },
+    "yes": {
+      "sympathy": 0,
+      "nextMedia": "f3.0.1"
+    },
+    "maybe": {
+      "voteAgain": true,
+      "nextMedia": "f3.0.2",
+      "sympathy": -1
+    }
+  },
+
+  "f2.0.2": {
+    "no": {
+      "sympathy": -1,
+      "nextMedia": "f2.0.0"
+    },
+    "yes": {
+      "sympathy": 0,
+      "nextMedia": "f2,0,1"
+    },
+    "maybe": {
+      "voteAgain": true,
+      "nextMedia": "f2.0.2",
+      "sympathy": -1
+    }
+  },
+
+  "f3.0.0": {
+    "no": {
+      "sympathy": 1,
+      "nextMedia": "f4.1.0"
+    },
+    "yes": {
+      "sympathy": 0,
+      "nextMedia": "f4.1.1"
+    },
+    "maybe": {
+      "voteAgain": true,
+      "nextMedia": "f4.1.2",
+      "sympathy": -1
+    }
+  },
+
+  "f3.0.1": {
+    "no": {
+      "sympathy": 1,
+      "nextMedia": "f4.2.0"
+    },
+    "yes": {
+      "sympathy": 0,
+      "nextMedia": "f4.2.1"
+    },
+    "maybe": {
+      "voteAgain": true,
+      "nextMedia": "f4.2.2",
+      "sympathy": -1
+    }
+  },
+
+  "f3.0.2": {
+    "no": {
+      "sympathy": 0,
+      "nextMedia": "f3.0.0"
+    },
+    "yes": {
+      "sympathy": 0,
+      "nextMedia": "f3.0.1"
+    },
+    "maybe": {
+      "voteAgain": true,
+      "nextMedia": "f3.0.2",
+      "sympathy": -1
+    }
+  },
+
+  "f4.1.0": {
+    "no": {
+      "sympathy": null,
+      "nextMedia": "s4.1.0"
+    },
+    "yes": {
+      "sympathy": null,
+      "nextMedia": "s4.1.1"
+    },
+    "maybe": {
+      "voteAgain": true,
+      "nextMedia": "s4.1.2",
+      "sympathy": null
+    }
+  },
+
+  "f4.1.1": {
+    "no": {
+      "sympathy": null,
+      "nextMedia": "s4.1.0"
+    },
+    "yes": {
+      "sympathy": null,
+      "nextMedia": "s4.1.1"
+    },
+    "maybe": {
+      "voteAgain": true,
+      "nextMedia": "s4.1.2",
+      "sympathy": null
+    }
+  },
+
+  "f4.1.2": {
+    "no": {
+      "sympathy": 1,
+      "nextMedia": "f4.1.0"
+    },
+    "yes": {
+      "sympathy": 0,
+      "nextMedia": "f4.1.1"
+    },
+    "maybe": {
+      "voteAgain": true,
+      "nextMedia": "f4.1.2",
+      "sympathy": -1
+    }
+  },
+
+  "f4.2.0": {
+    "no": {
+      "sympathy": null,
+      "nextMedia": "s4.1.0"
+    },
+    "yes": {
+      "sympathy": null,
+      "nextMedia": "s4.1.1"
+    },
+    "maybe": {
+      "voteAgain": true,
+      "nextMedia": "s4.1.2",
+      "sympathy": null
+    }
+  },
+
+  "f4.2.1": {
+    "no": {
+      "sympathy": null,
+      "nextMedia": "s4.2.0"
+    },
+    "yes": {
+      "sympathy": null,
+      "nextMedia": "s4.2.1"
+    },
+    "maybe": {
+      "voteAgain": true,
+      "nextMedia": "s4.2.2",
+      "sympathy": null
+    }
+  },
+
+  "f4.2.2": {
+    "no": {
+      "sympathy": 1,
+      "nextMedia": "f4.2.0"
+    },
+    "yes": {
+      "sympathy": 0,
+      "nextMedia": "f4.2.1"
+    },
+    "maybe": {
+      "voteAgain": true,
+      "nextMedia": "f4.2.2",
+      "sympathy": -1
+    }
+  },
+
+  "s4.1.0": {
+    "no": {
+      "sympathy": -1,
+      "nextMedia": "f5.1.0"
+    },
+    "yes": {
+      "sympathy": 0,
+      "nextMedia": "f5.1.1"
     },
     "maybe": {
       "voteAgain": false,
-      "nextMedia": "end_video4",
+      "nextMedia": "f5.1.2",
+      "sympathy": -1
+    }
+  },
+
+  "s4.1.1": {
+    "no": {
+      "sympathy": -1,
+      "nextMedia": "f5.1.0"
+    },
+    "yes": {
+      "sympathy": 0,
+      "nextMedia": "f5.1.1"
+    },
+    "maybe": {
+      "voteAgain": false,
+      "nextMedia": "f5.1.2",
+      "sympathy": -1
+    }
+  },
+
+  "s4.1.2": {
+    "no": {
+      "sympathy": -1,
+      "nextMedia": "f5.1.0"
+    },
+    "yes": {
+      "sympathy": 0,
+      "nextMedia": "f5.1.1"
+    },
+    "maybe": {
+      "voteAgain": false,
+      "nextMedia": "f5.1.2",
+      "sympathy": -1
+    }
+  },
+
+  "s4.2.0": {
+    "no": {
+      "sympathy": -1,
+      "nextMedia": "f5.2.0"
+    },
+    "yes": {
+      "sympathy": 0,
+      "nextMedia": "f5.2.1"
+    },
+    "maybe": {
+      "voteAgain": false,
+      "nextMedia": "f5.2.2",
+      "sympathy": -1
+    }
+  },
+
+  "s4.2.1": {
+    "no": {
+      "sympathy": -1,
+      "nextMedia": "f5.2.0"
+    },
+    "yes": {
+      "sympathy": 0,
+      "nextMedia": "f5.2.1"
+    },
+    "maybe": {
+      "voteAgain": false,
+      "nextMedia": "f5.2.2",
+      "sympathy": -1
+    }
+  },
+
+  "s4.2.2": {
+    "no": {
+      "sympathy": -1,
+      "nextMedia": "f5.2.0"
+    },
+    "yes": {
+      "sympathy": 0,
+      "nextMedia": "f5.2.1"
+    },
+    "maybe": {
+      "voteAgain": false,
+      "nextMedia": "f5.2.2",
+      "sympathy": -1
+    }
+  },
+
+  "f5.1.0": {
+    "no": {
+      "sympathy": null,
+      "nextMedia": "s5.1.0"
+    },
+    "yes": {
+      "sympathy": null,
+      "nextMedia": "s5.1.1"
+    },
+    "maybe": {
+      "voteAgain": true,
+      "nextMedia": "s5.1.2",
+      "sympathy": null
+    }
+  },
+
+  "f5.1.1": {
+    "no": {
+      "sympathy": null,
+      "nextMedia": "s5.1.0"
+    },
+    "yes": {
+      "sympathy": null,
+      "nextMedia": "s5.1.1"
+    },
+    "maybe": {
+      "voteAgain": true,
+      "nextMedia": "s5.1.2",
+      "sympathy": null
+    }
+  },
+
+  "f5.1.2": {
+    "no": {
+      "sympathy": -1,
+      "nextMedia": "f5.1.0"
+    },
+    "yes": {
+      "sympathy": 0,
+      "nextMedia": "f5.1.1"
+    },
+    "maybe": {
+      "voteAgain": true,
+      "nextMedia": "f5.1.2",
+      "sympathy": -1
+    }
+  },
+
+  "f5.2.0": {
+    "no": {
+      "sympathy": null,
+      "nextMedia": "s5.2.0"
+    },
+    "yes": {
+      "sympathy": null,
+      "nextMedia": "s5.2.1"
+    },
+    "maybe": {
+      "voteAgain": true,
+      "nextMedia": "s5.2.2",
+      "sympathy": null
+    }
+  },
+
+  "f5.2.1": {
+    "no": {
+      "sympathy": null,
+      "nextMedia": "s5.2.0"
+    },
+    "yes": {
+      "sympathy": null,
+      "nextMedia": "s5.2.1"
+    },
+    "maybe": {
+      "voteAgain": true,
+      "nextMedia": "s5.2.2",
+      "sympathy": null
+    }
+  },
+
+  "f5.2.2": {
+    "no": {
+      "sympathy": -1,
+      "nextMedia": "f5.2.0"
+    },
+    "yes": {
+      "sympathy": 0,
+      "nextMedia": "f5.2.1"
+    },
+    "maybe": {
+      "voteAgain": true,
+      "nextMedia": "f5.2.2",
+      "sympathy": -1
+    }
+  },
+  "s5.1.0": {
+    "no": {
+      "sympathy": 0,
+      "nextMedia": "f6.1.0"
+    },
+    "yes": {
+      "sympathy": -1,
+      "nextMedia": "f6.1.1"
+    },
+    "maybe": {
+      "voteAgain": false,
+      "nextMedia": "f6.1.2",
+      "sympathy": -1
+    }
+  },
+
+  "s5.1.1": {
+    "no": {
+      "sympathy": 0,
+      "nextMedia": "f6.1.0"
+    },
+    "yes": {
+      "sympathy": -1,
+      "nextMedia": "f6.1.1"
+    },
+    "maybe": {
+      "voteAgain": false,
+      "nextMedia": "f6.1.2",
+      "sympathy": -1
+    }
+  },
+
+  "s5.1.2": {
+    "no": {
+      "sympathy": 0,
+      "nextMedia": "f6.1.0"
+    },
+    "yes": {
+      "sympathy": -1,
+      "nextMedia": "f6.1.1"
+    },
+    "maybe": {
+      "voteAgain": false,
+      "nextMedia": "f6.1.2",
+      "sympathy": -1
+    }
+  },
+
+  "s5.2.0": {
+    "no": {
+      "sympathy": 0,
+      "nextMedia": "f6.2.0"
+    },
+    "yes": {
+      "sympathy": -1,
+      "nextMedia": "f6.2.1"
+    },
+    "maybe": {
+      "voteAgain": false,
+      "nextMedia": "f6.2.2",
+      "sympathy": -1
+    }
+  },
+
+  "s5.2.1": {
+    "no": {
+      "sympathy": 0,
+      "nextMedia": "f6.2.0"
+    },
+    "yes": {
+      "sympathy": -1,
+      "nextMedia": "f6.2.1"
+    },
+    "maybe": {
+      "voteAgain": false,
+      "nextMedia": "f6.2.2",
+      "sympathy": -1
+    }
+  },
+
+  "s5.2.2": {
+    "no": {
+      "sympathy": 0,
+      "nextMedia": "f6.2.0"
+    },
+    "yes": {
+      "sympathy": -1,
+      "nextMedia": "f6.2.1"
+    },
+    "maybe": {
+      "voteAgain": false,
+      "nextMedia": "f6.2.2",
+      "sympathy": -1
+    }
+  },
+
+  "f6.1.0": {
+    "no": {
+      "sympathy": null,
+      "nextMedia": "s6.1.0"
+    },
+    "yes": {
+      "sympathy": null,
+      "nextMedia": "s6.1.1"
+    },
+    "maybe": {
+      "voteAgain": true,
+      "nextMedia": "s6.1.1",
+      "sympathy": null
+    }
+  },
+
+  "f6.1.1": {
+    "no": {
+      "sympathy": null,
+      "nextMedia": "s6.1.0"
+    },
+    "yes": {
+      "sympathy": null,
+      "nextMedia": "s6.1.1"
+    },
+    "maybe": {
+      "voteAgain": true,
+      "nextMedia": "s6.1.2",
+      "sympathy": null
+    }
+  },
+
+  "f6.1.2": {
+    "no": {
+      "sympathy": 0,
+      "nextMedia": "f6.1.0"
+    },
+    "yes": {
+      "sympathy": -1,
+      "nextMedia": "f6.1.1"
+    },
+    "maybe": {
+      "voteAgain": true,
+      "nextMedia": "f6.1.2",
+      "sympathy": -1
+    }
+  },
+
+  "f6.2.0": {
+    "no": {
+      "sympathy": null,
+      "nextMedia": "s6.2.0"
+    },
+    "yes": {
+      "sympathy": null,
+      "nextMedia": "s6.2.1"
+    },
+    "maybe": {
+      "voteAgain": true,
+      "nextMedia": "s6.2.1",
+      "sympathy": null
+    }
+  },
+
+  "f6.2.1": {
+    "no": {
+      "sympathy": null,
+      "nextMedia": "s6.2.0"
+    },
+    "yes": {
+      "sympathy": null,
+      "nextMedia": "s6.2.1"
+    },
+    "maybe": {
+      "voteAgain": true,
+      "nextMedia": "s6.2.2",
+      "sympathy": null
+    }
+  },
+
+  "f6.2.2": {
+    "no": {
+      "sympathy": 0,
+      "nextMedia": "f6.2.0"
+    },
+    "yes": {
+      "sympathy": -1,
+      "nextMedia": "f6.2.1"
+    },
+    "maybe": {
+      "voteAgain": true,
+      "nextMedia": "f6.2.2",
+      "sympathy": -1
+    }
+  },
+
+  "s6.1.0": {
+    "no": {
+      "sympathy": 0,
+      "nextMedia": "f7.1.0"
+    },
+    "yes": {
+      "sympathy": -1,
+      "nextMedia": "f7.1.1"
+    },
+    "maybe": {
+      "voteAgain": false,
+      "nextMedia": "f7.1.2",
+      "sympathy": -1
+    }
+  },
+
+  "s6.1.1": {
+    "no": {
+      "sympathy": 0,
+      "nextMedia": "f7.1.0"
+    },
+    "yes": {
+      "sympathy": -1,
+      "nextMedia": "f7.1.1"
+    },
+    "maybe": {
+      "voteAgain": false,
+      "nextMedia": "f7.1.1",
+      "sympathy": -1
+    }
+  },
+
+  "s6.1.2": {
+    "no": {
+      "sympathy": 0,
+      "nextMedia": "f7.1.0"
+    },
+    "yes": {
+      "sympathy": -1,
+      "nextMedia": "f7.1.1"
+    },
+    "maybe": {
+      "voteAgain": false,
+      "nextMedia": "f7.1.2",
+      "sympathy": -1
+    }
+  },
+
+  "s6.2.0": {
+    "no": {
+      "sympathy": 0,
+      "nextMedia": "f7.1.0"
+    },
+    "yes": {
+      "sympathy": -1,
+      "nextMedia": "f7.1.1"
+    },
+    "maybe": {
+      "voteAgain": false,
+      "nextMedia": "f7.1.2",
+      "sympathy": -1
+    }
+  },
+
+  "s6.2.1": {
+    "no": {
+      "sympathy": 0,
+      "nextMedia": "f7.1.0"
+    },
+    "yes": {
+      "sympathy": -1,
+      "nextMedia": "f7.1.1"
+    },
+    "maybe": {
+      "voteAgain": false,
+      "nextMedia": "f7.1.1",
+      "sympathy": -1
+    }
+  },
+
+  "s6.2.2": {
+    "no": {
+      "sympathy": 0,
+      "nextMedia": "f7.1.0"
+    },
+    "yes": {
+      "sympathy": -1,
+      "nextMedia": "f7.1.1"
+    },
+    "maybe": {
+      "voteAgain": false,
+      "nextMedia": "f7.1.2",
+      "sympathy": -1
+    }
+  },
+
+  "f7.1.0": {
+    "no": {
+      "sympathy": null,
+      "nextMedia": "s7.1.0"
+    },
+    "yes": {
+      "sympathy": null,
+      "nextMedia": "s7.1.1"
+    },
+    "maybe": {
+      "voteAgain": true,
+      "nextMedia": "s7.1.2",
+      "sympathy": null
+    }
+  },
+
+  "f7.1.1": {
+    "no": {
+      "sympathy": null,
+      "nextMedia": "s7.1.0"
+    },
+    "yes": {
+      "sympathy": null,
+      "nextMedia": "s7.1.1"
+    },
+    "maybe": {
+      "voteAgain": true,
+      "nextMedia": "s7.1.2",
+      "sympathy": null
+    }
+  },
+
+  "f7.1.2": {
+    "no": {
+      "sympathy": 0,
+      "nextMedia": "f7.1.0"
+    },
+    "yes": {
+      "sympathy": -1,
+      "nextMedia": "f7.1.1"
+    },
+    "maybe": {
+      "voteAgain": true,
+      "nextMedia": "f7.1.2",
+      "sympathy": -1
+    }
+  },
+
+  "f7.2.0": {
+    "no": {
+      "sympathy": null,
+      "nextMedia": "s7.2.0"
+    },
+    "yes": {
+      "sympathy": null,
+      "nextMedia": "s7.2.1"
+    },
+    "maybe": {
+      "voteAgain": true,
+      "nextMedia": "s7.2.2",
+      "sympathy": null
+    }
+  },
+
+  "f7.2.1": {
+    "no": {
+      "sympathy": null,
+      "nextMedia": "s7.2.0"
+    },
+    "yes": {
+      "sympathy": null,
+      "nextMedia": "s7.2.1"
+    },
+    "maybe": {
+      "voteAgain": true,
+      "nextMedia": "s7.2.2",
+      "sympathy": null
+    }
+  },
+
+  "f7.2.2": {
+    "no": {
+      "sympathy": 0,
+      "nextMedia": "f7.2.0"
+    },
+    "yes": {
+      "sympathy": -1,
+      "nextMedia": "f7.2.1"
+    },
+    "maybe": {
+      "voteAgain": true,
+      "nextMedia": "f7.2.2",
+      "sympathy": -1
+    }
+  },
+
+  "s7.1.0": {
+    "no": {
+      "sympathy": 0,
+      "nextMedia": "f8.1.0"
+    },
+    "yes": {
+      "sympathy": -1,
+      "nextMedia": "f8.1.1"
+    },
+    "maybe": {
+      "voteAgain": false,
+      "nextMedia": "f8.1.2",
+      "sympathy": -1
+    }
+  },
+
+  "s7.1.1": {
+    "no": {
+      "sympathy": 0,
+      "nextMedia": "f8.1.0"
+    },
+    "yes": {
+      "sympathy": -1,
+      "nextMedia": "f8.1.1"
+    },
+    "maybe": {
+      "voteAgain": false,
+      "nextMedia": "f8.1.2",
+      "sympathy": -1
+    }
+  },
+
+  "s7.1.2": {
+    "no": {
+      "sympathy": 0,
+      "nextMedia": "f8.1.0"
+    },
+    "yes": {
+      "sympathy": -1,
+      "nextMedia": "f8.1.1"
+    },
+    "maybe": {
+      "voteAgain": false,
+      "nextMedia": "f8.1.2",
+      "sympathy": -1
+    }
+  },
+
+  "s7.2.0": {
+    "no": {
+      "sympathy": 0,
+      "nextMedia": "f8.2.0"
+    },
+    "yes": {
+      "sympathy": -1,
+      "nextMedia": "f8.2.1"
+    },
+    "maybe": {
+      "voteAgain": false,
+      "nextMedia": "f8.2.2",
+      "sympathy": -1
+    }
+  },
+
+  "s7.2.1": {
+    "no": {
+      "sympathy": 0,
+      "nextMedia": "f8.2.0"
+    },
+    "yes": {
+      "sympathy": -1,
+      "nextMedia": "f8.2.1"
+    },
+    "maybe": {
+      "voteAgain": false,
+      "nextMedia": "f8.2.2",
+      "sympathy": -1
+    }
+  },
+
+  "s7.2.2": {
+    "no": {
+      "sympathy": 0,
+      "nextMedia": "f8.2.0"
+    },
+    "yes": {
+      "sympathy": -1,
+      "nextMedia": "f8.2.1"
+    },
+    "maybe": {
+      "voteAgain": false,
+      "nextMedia": "f8.2.2",
+      "sympathy": -1
+    }
+  },
+
+  "f8.1.0": {
+    "no": {
+      "sympathy": 0,
+      "nextMedia": "end_s8.1.0,end_s8.1.1"
+    },
+    "yes": {
+      "sympathy": 0,
+      "nextMedia": "end_s8.1.2"
+    },
+    "maybe": {
+      "voteAgain": true,
+      "nextMedia": "end_s8.1.0,end_s8.1.1",
       "sympathy": 0
+    }
+  },
+
+  "f8.1.1": {
+    "no": {
+      "sympathy": 0,
+      "nextMedia": "end_s8.1.0,end_s8.1.1"
+    },
+    "yes": {
+      "sympathy": 0,
+      "nextMedia": "end_s8.1.2"
+    },
+    "maybe": {
+      "voteAgain": true,
+      "nextMedia": "end_s8.1.0,end_s8.1.1",
+      "sympathy": 0
+    }
+  },
+
+  "f8.1.2": {
+    "no": {
+      "sympathy": 0,
+      "nextMedia": "f8.1.0"
+    },
+    "yes": {
+      "sympathy": -1,
+      "nextMedia": "f8.1.1"
+    },
+    "maybe": {
+      "voteAgain": true,
+      "nextMedia": "f8.1.2",
+      "sympathy": -1
+    }
+  },
+
+  "f8.2.0": {
+    "no": {
+      "sympathy": 0,
+      "nextMedia": "end_s8.2.0,end_s8.2.1"
+    },
+    "yes": {
+      "sympathy": 0,
+      "nextMedia": "end_s8.2.2"
+    },
+    "maybe": {
+      "voteAgain": true,
+      "nextMedia": "end_s8.2.0,end_s8.2.1",
+      "sympathy": 0
+    }
+  },
+
+  "f8.2.1": {
+    "no": {
+      "sympathy": 0,
+      "nextMedia": "end_s8.2.0,end_s8.2.1"
+    },
+    "yes": {
+      "sympathy": 0,
+      "nextMedia": "end_s8.2.2"
+    },
+    "maybe": {
+      "voteAgain": true,
+      "nextMedia": "end_s8.2.0,end_s8.2.1",
+      "sympathy": 0
+    }
+  },
+
+  "f8.2.2": {
+    "no": {
+      "sympathy": 0,
+      "nextMedia": "f8.2.0"
+    },
+    "yes": {
+      "sympathy": -1,
+      "nextMedia": "f8.2.1"
+    },
+    "maybe": {
+      "voteAgain": true,
+      "nextMedia": "f8.2.2",
+      "sympathy": -1
     }
   }
 }
+
