@@ -92,8 +92,8 @@ app.post('/triggerVoting', function (req, res) {
     setTimeout(function () {
         sendEventData.enabled = false;
         sendEndEvent = true;
-        console.log("voting time finished");
-    }, votingTime * 1000);
+        //console.log("voting time finished");
+    }, (votingTime * 1000) + 3000);
     res.sendStatus(200);
 });
 
