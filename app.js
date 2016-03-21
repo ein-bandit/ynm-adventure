@@ -124,7 +124,7 @@ app.get('/events', function (req, res) {
         'Content-Type': 'text/event-stream',
         'Cache-Control': 'no-cache'
     });
-    console.log('a client has connected');
+    //console.log('a client has connected');
     clients++;
     //is this needed as loop that everyone gets the message?
 
@@ -137,7 +137,7 @@ app.get('/events', function (req, res) {
             pingCounter = 0;
         } else {
             if (pingCounter == 15) {
-                console.log("sending ping event to client.");
+                //console.log("sending ping event to client.");
                 res.write("event: ping\n");
                 res.write("data: {}\n\n");
                 pingCounter = 0;
