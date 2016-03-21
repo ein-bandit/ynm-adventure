@@ -26,11 +26,15 @@
         $.ajaxSetup({cache: false});
 
         var search = window.location.search;
-        search = search.split("&");
-        var param1 = search[0].split("=");
-        var param2 = search[1].split("=");
-        param1 = param1[1];
-        param2 = parseInt(param2[1]);
+        var debug = false;
+        if (search.indexOf("&") != -1) {
+            search = search.split("&");
+            var param1 = search[0].split("=");
+            var param2 = search[1].split("=");
+            param1 = param1[1];
+            param2 = parseInt(param2[1]);
+            debug = true;
+        }
 
         var source = new EventSource("/updates", {withCredentials: false});
 
@@ -40,19 +44,10 @@
         var currentStateId = "";
 
         var _sympathy = 0;
-
-        if (param1.length > 0 || param2 > 0) {
+        if (debug === true) {
             var currentStateId = param1;
-            var points = param2;
+            _sympathy = param2;
         }
-
-
-        var clientsinterval = setInterval(function() {
-            $.get("/nrclients").then(function(data) {
-                console.log("received #clients");
-                $("#connectedUsers").text(data.clients);
-            });
-        }, 5000);
 
         $.get("/data").then(function (data) {
             gameData = data;
@@ -60,6 +55,7 @@
             if (currentStateId.length == 0) {
                 currentStateId = gameData.start;
             }
+            doGameLoop();
         });
 
         source.addEventListener("ping", function(event) {
@@ -108,8 +104,8 @@
                         voteLoopGard = false;
                     }
                 }
-                if (current.nextMedia.indexOf("end_") != -1) {
-                    calcAndPlayEnd(finalAnswer, current.nextMedia);
+                if (gameData[currentStateId][finalAnswer].nextMedia.indexOf("end_") != -1) {
+                    calcAndPlayEnd(finalAnswer, gameData[currentStateId][finalAnswer].nextMedia);
                     return;
                 }
                 currentStateId = current.nextMedia;
@@ -151,34 +147,23 @@
         }
         function calcAndPlayEnd(finalAnswer, nextMedia) {
             var finalVideo = "";
+            console.log(_sympathy);
             if (finalAnswer === "no") {
                 if (_sympathy >= 0) {
                     var temp1 = nextMedia.split(",")[0];
-                    console.log("before " + finalVideo);
-                    finalVideo = temp1.substring(4, temp.length);
-                    console.log("after " + finalVideo);
+                    finalVideo = temp1.substring(4, temp1.length);
                 } else {
                     var temp2 = nextMedia.split(",")[1];
-                    console.log("before " + finalVideo);
-                    finalVideo = temp2.substring(4, temp.length);
-                    console.log("after " + finalVideo);
+                    finalVideo = temp2.substring(4, temp2.length);
                 }
             } else {
-                finalVideo = nextMedia;
+                finalVideo = nextMedia.substring(4, nextMedia.length);
             }
             startNextVideo(finalVideo, true);
-        }
-        function startGame() {
-            clearInterval(clientsinterval);
-            $("#startGameButton").hide();
-            $("#connectedUsers").parent().hide();
-            doGameLoop();
         }
     </script>
 </head>
 <body>
-<div><div id="connectedUsers">0</div>connected players!</div>
-<button id="startGameButton" onclick="startGame()">start Game</button>
 <div id="voting" style="display:none">voting started!</div>
 <div class="center">
     <video id="video" preload="auto">
