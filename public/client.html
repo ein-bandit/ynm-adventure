@@ -81,6 +81,7 @@
                 };
                 source.onerror = function (err) {
                     console.log(err);
+                    alert("lost connection");
                     source = new EventSource("/events", {withCredentials: false});
                 };
             }
