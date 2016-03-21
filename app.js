@@ -52,16 +52,6 @@ app.get('/data', function (req, res) {
     res.sendFile(path.join(__dirname, '/public', 'data.json'));
 });
 
-app.get('/nrclients', function (req, res) {
-    res.setHeader('Content-Type', 'application/json');
-    res.send(JSON.stringify({ clients: clients }));
-});
-
-app.get('/disconnect', function (req, res) {
-    clients--;
-    console.log("lost a client");
-    res.sendStatus(200);
-});
 app.get('/client', function (req, res) {
     res.sendFile(path.join(__dirname, '/public', 'client.html'));
 });

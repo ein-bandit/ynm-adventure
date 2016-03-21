@@ -50,10 +50,12 @@
 
             connect();
         });
-        $(window).on("beforeunload", function () {
+        /*$(window).on("beforeunload", function () {
             source.close();
-            $.get('/disconnect');
-        });
+            $.get('/disconnect').then(function() {
+                source = new EventSource("/events", {withCredentials: false});
+            });
+        });*/
         if (!!window.EventSource) {
 
             var eventCounter = 0;
