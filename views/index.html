@@ -23,17 +23,8 @@
             if (search.indexOf("?debug") != -1) {
                 $("#debug").css("display", "block");
             }
-
-            checkUsers();
         });
-        var interval;
-        function checkUsers() {
-            interval = setInterval(function() {
-                $.get("/nrclients").then(function(data) {
-                    $("#connectedUsers").text(data.clients);
-                });
-            }, 5000);
-        }
+
 
     </script>
 </head>
@@ -49,10 +40,6 @@
 <a id="gameLink" onclick="clearInterval(interval)" href="/game?startingPoint=&achievedPoints=0">
     <button>startGame</button>
 </a>
-<div>
-<div id="connectedUsers">0</div>
-    players connected!
-</div>
 
 </body>
 </html>

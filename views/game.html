@@ -46,13 +46,20 @@
             var points = param2;
         }
 
+
+        var clientsinterval = setInterval(function() {
+            $.get("/nrclients").then(function(data) {
+                console.log("received #clients");
+                $("#connectedUsers").text(data.clients);
+            });
+        }, 5000);
+
         $.get("/data").then(function (data) {
             gameData = data;
             console.log(gameData);
             if (currentStateId.length == 0) {
                 currentStateId = gameData.start;
             }
-            doGameLoop();
         });
 
         source.addEventListener("ping", function(event) {
@@ -61,8 +68,6 @@
 
         source.addEventListener("vote", function (event) {
             var data = JSON.parse(event.data);
-
-            //console.log("received voting");
 
             var sumAnswers = data.answers.yes + data.answers.no;
             $("#answers-yes").css("width", (Math.round((data.answers.yes / sumAnswers) * 100)) + "%");
@@ -149,27 +154,37 @@
             if (finalAnswer === "no") {
                 if (_sympathy >= 0) {
                     var temp1 = nextMedia.split(",")[0];
+                    console.log("before " + finalVideo);
                     finalVideo = temp1.substring(4, temp.length);
+                    console.log("after " + finalVideo);
                 } else {
                     var temp2 = nextMedia.split(",")[1];
+                    console.log("before " + finalVideo);
                     finalVideo = temp2.substring(4, temp.length);
+                    console.log("after " + finalVideo);
                 }
             } else {
                 finalVideo = nextMedia;
             }
             startNextVideo(finalVideo, true);
         }
+        function startGame() {
+            clearInterval(clientsinterval);
+            $("#startGameButton").hide();
+            $("#connectedUsers").parent().hide();
+            doGameLoop();
+        }
     </script>
 </head>
 <body>
+<div><div id="connectedUsers">0</div>connected players!</div>
+<button id="startGameButton" onclick="startGame()">start Game</button>
 <div id="voting" style="display:none">voting started!</div>
 <div class="center">
     <video id="video" preload="auto">
         <source id="videoSource" src="" type="video/mp4"/>
     </video>
 </div>
-
-<button onclick="startVoting(10)">start dummy voting</button>
 
 <div class="progress" id="answers" style="display:none">
     <div class="progress-bar progress-bar-success" id="answers-yes" style="width: 50%">
