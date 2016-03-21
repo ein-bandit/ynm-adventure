@@ -1,10 +1,5 @@
 {
-  "start":"f.0.0.0",
-  "end": {
-    "yes":["video3"],
-    "no":["video2","video2"],
-    "maybe":["video1"]
-  },
+  "start":"f0.0.0",
 
   "f.0.0.0": {
     "yes": {
@@ -53,18 +48,19 @@
       "sympathy": -1
     }
   },
+
   "video3": {
     "yes": {
       "sympathy": 1,
-      "nextMedia": "end"
+      "nextMedia": "end_video4"
     },
     "no": {
       "sympathy": 0,
-      "nextMedia": "end"
+      "nextMedia": "end_video3,end_video1"
     },
     "maybe": {
       "voteAgain": false,
-      "nextMedia": "end",
+      "nextMedia": "end_video4",
       "sympathy": 0
     }
   }

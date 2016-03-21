@@ -88,19 +88,6 @@ app.post('/triggerVoting', function (req, res) {
         sendEndEvent = true;
         console.log("voting time finished");
     }, votingTime * 1000);
-    //start timer voting time + 5
-    /* var timer = votingTime;
-     console.log("inital timer value: " + timer);
-     var voteInterval = setInterval(function () {
-     console.log("timer value: " + timer);
-     if (timer == 0) {
-     sendEventData.enabled = false;
-     sendEndEvent = true;
-     console.log("voting time finished");
-     clearInterval(voteInterval);
-     }
-     timer--;
-     }, (1000));*/
     res.sendStatus(200);
 });
 
@@ -169,8 +156,6 @@ app.post('/answer', function (req, res) {
             console.log("no valid answer");
             break;
     }
-    //console.log(currentAnswers);
-    //data (with answers) is written periodically to index.
     res.sendStatus(200);
 });
 
