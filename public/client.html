@@ -9,16 +9,19 @@
             background-repeat: no-repeat;
             background-size: cover;
         }
+
         #dummy {
             padding-top: 35%;
         }
+
         #answers {
-            width:60%;
-            margin:0 auto;
+            width: 60%;
+            margin: 0 auto;
             height: 100%;
-            display:none;
+            display: none;
         }
-        #btn-yes,#btn-no,#btn-dummy {
+
+        #btn-yes, #btn-no, #btn-dummy {
             width: 100%;
             height: 100%;
             padding-bottom: 36%;
@@ -26,6 +29,7 @@
 
             cursor: pointer;
         }
+
         #btn-dummy {
             cursor: default;
         }
@@ -37,6 +41,7 @@
             background_active: '/images?image=client_background',
             background_inactive: '/images?image=client_background_inactive'
         };
+        var source;
         $("document").ready(function () {
             $("html").css("background-image", 'url(' + bgs['background_active'] + ')');
             $("html").css("background-image", 'url(' + bgs['background_inactive'] + ')');
@@ -45,7 +50,10 @@
 
             connect();
         });
-
+        $(window).on("beforeunload", function () {
+            source.close();
+            $.get('/disconnect');
+        });
         if (!!window.EventSource) {
 
             var eventCounter = 0;
@@ -53,7 +61,7 @@
 
             function connect() {
 
-                var source = new EventSource("/events", {withCredentials: false});
+                source = new EventSource("/events", {withCredentials: false});
                 $('#connect').css('display', 'none');
 
                 source.onmessage = function (event) {
@@ -110,7 +118,7 @@
         <div id="btn-yes"></div>
     </a>
     <a>
-    <div id="btn-dummy"></div>
+        <div id="btn-dummy"></div>
     </a>
     <a onclick="sendAnswer(1)">
         <div id="btn-no"></div>

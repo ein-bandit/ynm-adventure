@@ -8,7 +8,7 @@
             background-image: url(/images?image=game_BG_tiled_small);
             background-repeat: repeat;
 
-            color: white;<
+            color: white;
         }
     </style>
     <script src="components/jquery/dist/jquery.min.js"></script>
@@ -24,8 +24,16 @@
                 $("#debug").css("display", "block");
             }
 
-
+            checkUsers();
         });
+        var interval;
+        function checkUsers() {
+            interval = setInterval(function() {
+                $.get("/nrclients").then(function(data) {
+                    $("#connectedUsers").text(data.clients);
+                });
+            }, 5000);
+        }
 
     </script>
 </head>
@@ -38,9 +46,13 @@
     <input id="achievedPoints" value="0" type="number">
     <br/>
 </div>
-<a id="gameLink" href="/game?startingPoint=&achievedPoints=0">
+<a id="gameLink" onclick="clearInterval(interval)" href="/game?startingPoint=&achievedPoints=0">
     <button>startGame</button>
 </a>
+<div>
+<div id="connectedUsers">0</div>
+    players connected!
+</div>
 
 </body>
 </html>

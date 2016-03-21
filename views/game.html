@@ -64,7 +64,6 @@
 
             //console.log("received voting");
 
-            $("#nrconnections").text(data.clients);
             var sumAnswers = data.answers.yes + data.answers.no;
             $("#answers-yes").css("width", (Math.round((data.answers.yes / sumAnswers) * 100)) + "%");
             $("#answers-no").css("width", (Math.round((data.answers.no / sumAnswers) * 100)) + "%");
@@ -77,6 +76,7 @@
         source.addEventListener("end", function (event) {
             console.log("voting ended event.");
             $("#answers").show();
+            $("voting").hide();
             //blocks the process for 5 seconds and continues with evaluation -> next video.
             setTimeout(function () {
 
@@ -125,6 +125,7 @@
                 mediaCounter: mediaCounter++,
                 votingTime: votingTime
             });
+            $("#voting").show()
         }
         function doGameLoop() {
             startNextVideo(currentStateId);
@@ -161,8 +162,7 @@
     </script>
 </head>
 <body>
-<div>nr connections</div>
-<div id="nrconnections">0</div>
+<div id="voting" style="display:none">voting started!</div>
 <div class="center">
     <video id="video" preload="auto">
         <source id="videoSource" src="" type="video/mp4"/>

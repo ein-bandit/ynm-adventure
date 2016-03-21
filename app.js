@@ -52,8 +52,14 @@ app.get('/data', function (req, res) {
     res.sendFile(path.join(__dirname, '/public', 'data.json'));
 });
 
+app.get('/nrclients', function (req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ clients: clients }));
+});
+
 app.get('/disconnect', function (req, res) {
     clients--;
+    console.log("lost a client");
     res.sendStatus(200);
 });
 app.get('/client', function (req, res) {
@@ -103,7 +109,7 @@ app.get('/updates', function (req, res) {
         if (sendEventData.enabled === true) {
             console.log("send data to index");
             res.write("event: vote\n");
-            res.write("data: { \"clients\" : " + clients + ", \"answers\" : " + JSON.stringify(currentAnswers) + " }\n\n");
+            res.write("data: { \"answers\" : " + JSON.stringify(currentAnswers) + " }\n\n");
         }
         if (sendEndEvent === true) {
             console.log("end voting");
@@ -112,7 +118,7 @@ app.get('/updates', function (req, res) {
             res.write("data: {} \n\n");
         }
         if (sendEventData.enabled == false && sendEndEvent == false) {
-            console.log("sending ping event");
+            //console.log("sending ping event");
             res.write("event: ping\n");
             res.write("data: {}\n\n");
         }
@@ -128,8 +134,8 @@ app.get('/events', function (req, res) {
         'Content-Type': 'text/event-stream',
         'Cache-Control': 'no-cache'
     });
-    //console.log('a client has connected');
-    clients += 1;
+    console.log('a client has connected');
+    clients++;
     //is this needed as loop that everyone gets the message?
     setInterval(function () {
         //while voting is enabled.
