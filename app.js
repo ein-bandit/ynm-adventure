@@ -19,14 +19,6 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-var sendEventData = {
-    enabled: false,
-    votingTime: 30
-};
-var sendEndEvent = false;
-var eventCounter = 0;
-var clients = 0;
-
 var currentAnswers = {
     yes: 0,
     no: 0
@@ -37,7 +29,7 @@ function resetCurrentAnswers() {
     currentAnswers.no = 0;
 }
 
-
+var clientCounter = 0;
 //get files
 
 app.get('/index', function (req, res) {
@@ -56,6 +48,18 @@ app.get('/client', function (req, res) {
     res.sendFile(path.join(__dirname, '/public', 'client.html'));
 });
 
+app.post('/disconnect', function (req, res) {
+    if (eventRes.length > 0) {
+        for (var index in eventRes) {
+            if (parseInt(eventRes[index].id) == req.body) {
+                console.log("deleted res obj from array with id: " + eventRes[index].res.id);
+                eventRes.splice(index, 1);
+            }
+        }
+    }
+    res.sendStatus(200);
+});
+
 app.get('/images', function (req, res) {
     var image = req.query.image;
     console.log("fetching image " + image);
@@ -70,22 +74,22 @@ app.get('/videos', function (req, res) {
 
 app.post('/triggerVoting', function (req, res) {
     resetCurrentAnswers();
-    console.log(req.body);
+    console.log("trigger req body " + req.body);
     var votingTime = parseInt(req.body['votingTime']);
 
-    sendEventData.enabled = true;
-    sendEventData.votingTime = votingTime || 10;
-    eventCounter = parseInt(req.body['mediaCounter']);
+    sendEventRes(parseInt(req.body['mediaCounter']), votingTime);
     console.log("starting voting");
     //res.setHeader('Cache-Control','no-cache');
 
     setTimeout(function () {
-        sendEventData.enabled = false;
-        sendEndEvent = true;
+        sendVoteData();
         //console.log("voting time finished");
     }, (votingTime * 1000) + 3000);
     res.sendStatus(200);
 });
+
+var indexRes;
+
 
 var masterInterval;
 app.get('/updates', function (req, res) {
@@ -94,63 +98,50 @@ app.get('/updates', function (req, res) {
         'Content-Type': 'text/event-stream',
         'Cache-Control': 'no-cache'
     });
-    clearInterval(masterInterval);
+
+    indexRes = res;
+
     masterInterval = setInterval(function () {
-        if (sendEventData.enabled === true) {
-            console.log("send data to index");
-            res.write("event: vote\n");
-            res.write("data: { \"answers\" : " + JSON.stringify(currentAnswers) + " }\n\n");
-        }
-        if (sendEndEvent === true) {
-            console.log("end voting");
-            sendEndEvent = false;
-            res.write("event: end\n");
-            res.write("data: {} \n\n");
-        }
-        if (sendEventData.enabled == false && sendEndEvent == false) {
-            //console.log("sending ping event to index.");
-            res.write("event: ping\n");
-            res.write("data: {}\n\n");
-        }
-    }, 3000);
+        //console.log("sending ping event to index.");
+        res.write("event: ping\n");
+        res.write("data: {}\n\n");
+    }, 25000);
 
 });
 
+function sendVoteData() {
+    indexRes.write("event: vote\n");
+    indexRes.write("data: { \"answers\" : " + JSON.stringify(currentAnswers) + " }\n\n");
+}
+
 ////client functions
-var executionCounter = 0;
+var eventRes = [];
+function sendEventRes(eventCounter, votingTime) {
+    for (index in eventRes) {
+        eventRes[index].res.write("data: { \"eventNr\" : " + eventCounter + ", \"votingTime\":" + JSON.stringify(votingTime) + "}\n\n");
+    }
+}
 app.get('/events', function (req, res) {
     res.writeHead(200, {
         'Connection': 'keep-alive',
         'Content-Type': 'text/event-stream',
         'Cache-Control': 'no-cache'
     });
-    //console.log('a client has connected');
-    clients++;
-    //is this needed as loop that everyone gets the message?
 
-    var pingCounter = 0;
+    eventRes.push({id: clientCounter, res: res});
+
+    res.write("event: id\n");
+    res.write("data: { \"id\": " + clientCounter + "}\n\n");
+    clientCounter++;
+
     setInterval(function () {
-        //while voting is enabled.
-        if (sendEventData.enabled === true) {
-            //console.log('sending event');
-            res.write("data: { \"eventNr\" : " + eventCounter + ", \"votingTime\":" + JSON.stringify(sendEventData.votingTime) + "}\n\n");
-            pingCounter = 0;
-        } else {
-            if (pingCounter == 15) {
-                //console.log("sending ping event to client.");
-                res.write("event: ping\n");
-                res.write("data: {}\n\n");
-                pingCounter = 0;
-            } else {
-                pingCounter++;
-            }
-        }
-    }, 1000);
+        res.write("event: ping\n");
+        res.write("data: {}\n\n");
+    }, 25000);
 });
 
 
 app.post('/answer', function (req, res) {
-    console.log(req.body.data);
     var answer = req.body.data;
     //console.log('received answer: ' + answer);
     switch (parseInt(answer)) {

@@ -42,6 +42,7 @@
             background_inactive: '/images?image=client_background_inactive'
         };
         var source;
+        var myId = null;
         $("document").ready(function () {
             $("html").css("background-image", 'url(' + bgs['background_active'] + ')');
             $("html").css("background-image", 'url(' + bgs['background_inactive'] + ')');
@@ -51,6 +52,7 @@
             connect();
         });
         $(window).on("beforeunload", function () {
+            $.post("/disconnect", {id:myId});
             source.close();
         });
         if (!!window.EventSource) {
@@ -79,9 +81,12 @@
                         //}
                     }
                 };
+                source.addEventListener("id", function (event) {
+                    myId = JSON.parse(event.data).id;
+                });
                 source.onerror = function (err) {
                     console.log(err);
-                    alert("lost connection, please refresh page.");
+                    $.post("/disconnect", {id:myId});
                 };
 
             }

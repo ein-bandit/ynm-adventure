@@ -62,7 +62,10 @@
             console.log("ping event received");
         });
 
+
+        var voteLoopGard = false;
         source.addEventListener("vote", function (event) {
+
             var data = JSON.parse(event.data);
 
             var sumAnswers = data.answers.yes + data.answers.no;
@@ -70,12 +73,7 @@
             $("#answers-no").css("width", (Math.round((data.answers.no / sumAnswers) * 100)) + "%");
             $("#answers-yes").text(data.answers.yes);
             $("#answers-no").text(data.answers.no);
-        }, false);
 
-
-        var voteLoopGard = false;
-        source.addEventListener("end", function (event) {
-            console.log("voting ended event.");
             $("#answers").show();
             $("#voting").hide();
             //blocks the process for 5 seconds and continues with evaluation -> next video.
