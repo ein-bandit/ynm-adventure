@@ -136,7 +136,7 @@ app.get('/events', function (req, res) {
             pingCounter = 0;
         } else {
             if (pingCounter == 15) {
-                //console.log("sending ping event to client.");
+                console.log("sending ping event to client.");
                 res.write("event: ping\n");
                 res.write("data: {}\n\n");
                 pingCounter = 0;
