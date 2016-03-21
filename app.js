@@ -108,7 +108,7 @@ app.get('/updates', function (req, res) {
             res.write("data: {} \n\n");
         }
         if (sendEventData.enabled == false && sendEndEvent == false) {
-            console.log("sending ping event to index.");
+            //console.log("sending ping event to index.");
             res.write("event: ping\n");
             res.write("data: {}\n\n");
         }
@@ -129,13 +129,20 @@ app.get('/events', function (req, res) {
     //is this needed as loop that everyone gets the message?
     setInterval(function () {
         //while voting is enabled.
+        var pingCounter = 0;
         if (sendEventData.enabled === true) {
             //console.log('sending event');
             res.write("data: { \"eventNr\" : " + eventCounter + ", \"votingTime\":" + JSON.stringify(sendEventData.votingTime) + "}\n\n");
+            pingCounter = 0;
         } else {
-            console.log("sending ping event to client.");
-            res.write("event: ping\n");
-            res.write("data: {}\n\n");
+            if (pingCounter == 15) {
+                //console.log("sending ping event to client.");
+                res.write("event: ping\n");
+                res.write("data: {}\n\n");
+                pingCounter = 0;
+            } else {
+                pingCounter++;
+            }
         }
     }, 1000);
 });
