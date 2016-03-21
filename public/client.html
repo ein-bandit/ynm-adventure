@@ -81,9 +81,12 @@
                 };
                 source.onerror = function (err) {
                     console.log(err);
-                    alert("lost connection");
-                    source = new EventSource("/events", {withCredentials: false});
+                    alert("lost connection, please refresh page.");
                 };
+
+                setInterval(function() {
+                    $.get("/dummy");
+                },20000);
             }
 
         } else {

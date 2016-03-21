@@ -56,6 +56,10 @@ app.get('/client', function (req, res) {
     res.sendFile(path.join(__dirname, '/public', 'client.html'));
 });
 
+app.get('/dummy', function (req, res) {
+    res.sendStatus(200);
+});
+
 app.get('/images', function (req, res) {
     var image = req.query.image;
     console.log("fetching image " + image);
