@@ -127,9 +127,10 @@ app.get('/events', function (req, res) {
     console.log('a client has connected');
     clients++;
     //is this needed as loop that everyone gets the message?
+
+    var pingCounter = 0;
     setInterval(function () {
         //while voting is enabled.
-        var pingCounter = 0;
         if (sendEventData.enabled === true) {
             //console.log('sending event');
             res.write("data: { \"eventNr\" : " + eventCounter + ", \"votingTime\":" + JSON.stringify(sendEventData.votingTime) + "}\n\n");
