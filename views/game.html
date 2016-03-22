@@ -27,6 +27,8 @@
     <script>
         $.ajaxSetup({cache: false});
 
+        var audioMuted = false;
+
         var search = window.location.search;
         var debug = false;
         if (search.indexOf("&") != -1) {
@@ -58,6 +60,13 @@
                 currentStateId = gameData.start;
             }
             doGameLoop();
+        });
+
+        $("#video").keypress(function(event) {
+            if ("m" === String.fromCharCode(event.keyCode)) {
+                audioMuted = !audioMuted;
+                muteOrUnmuteAudio();
+            }
         });
 
         source.addEventListener("ping", function (event) {
@@ -136,6 +145,9 @@
             $("#videoSource").attr("src", "/videos?video=" + video);
             $("#video").load();
             $("#video").get(0).play();
+            if (audioMuted === true) {
+                muteOrUnmuteAudio();
+            }
             console.log("video started");
             $("#video").bind("ended", function (event) {
                 console.log("video ended");
@@ -144,6 +156,9 @@
                     startVoting(10);
                 }
             });
+        }
+        function muteOrUnmuteAudio() {
+            $("#video").prop('muted', audioMuted);
         }
         function calcAndPlayEnd(finalAnswer, nextMedia) {
             var finalVideo = "";
