@@ -356,15 +356,15 @@
   "f5.1.0": {
     "no": {
       "sympathy": null,
-      "nextMedia": "s5.1.0"
+      "nextMedia": "end_s5.1.0"
     },
     "yes": {
       "sympathy": null,
-      "nextMedia": "s5.1.1"
+      "nextMedia": "end_s5.1.1"
     },
     "maybe": {
-      "voteAgain": true,
-      "nextMedia": "s5.1.2",
+      "voteAgain": false,
+      "nextMedia": "end_s5.1.2",
       "sympathy": null
     }
   },
@@ -372,15 +372,15 @@
   "f5.1.1": {
     "no": {
       "sympathy": null,
-      "nextMedia": "s5.1.0"
+      "nextMedia": "end_s5.1.0"
     },
     "yes": {
       "sympathy": null,
-      "nextMedia": "s5.1.1"
+      "nextMedia": "end_s5.1.1"
     },
     "maybe": {
-      "voteAgain": true,
-      "nextMedia": "s5.1.2",
+      "voteAgain": false,
+      "nextMedia": "end_s5.1.2",
       "sympathy": null
     }
   },
@@ -388,15 +388,15 @@
   "f5.1.2": {
     "no": {
       "sympathy": -1,
-      "nextMedia": "f5.1.0"
+      "nextMedia": "end_f5.1.0"
     },
     "yes": {
       "sympathy": 0,
-      "nextMedia": "f5.1.1"
+      "nextMedia": "end_f5.1.1"
     },
     "maybe": {
       "voteAgain": true,
-      "nextMedia": "f5.1.2",
+      "nextMedia": "end_f5.1.2",
       "sympathy": -1
     }
   },
@@ -404,15 +404,15 @@
   "f5.2.0": {
     "no": {
       "sympathy": null,
-      "nextMedia": "s5.2.0"
+      "nextMedia": "end_s5.2.0"
     },
     "yes": {
       "sympathy": null,
-      "nextMedia": "s5.2.1"
+      "nextMedia": "end_s5.2.1"
     },
     "maybe": {
-      "voteAgain": true,
-      "nextMedia": "s5.2.2",
+      "voteAgain": false,
+      "nextMedia": "end_s5.2.2",
       "sympathy": null
     }
   },
@@ -420,15 +420,15 @@
   "f5.2.1": {
     "no": {
       "sympathy": null,
-      "nextMedia": "s5.2.0"
+      "nextMedia": "end_s5.2.0"
     },
     "yes": {
       "sympathy": null,
-      "nextMedia": "s5.2.1"
+      "nextMedia": "end_s5.2.1"
     },
     "maybe": {
-      "voteAgain": true,
-      "nextMedia": "s5.2.2",
+      "voteAgain": false,
+      "nextMedia": "end_s5.2.2",
       "sympathy": null
     }
   },
@@ -436,15 +436,15 @@
   "f5.2.2": {
     "no": {
       "sympathy": -1,
-      "nextMedia": "f5.2.0"
+      "nextMedia": "end_f5.2.0"
     },
     "yes": {
       "sympathy": 0,
-      "nextMedia": "f5.2.1"
+      "nextMedia": "end_f5.2.1"
     },
     "maybe": {
-      "voteAgain": true,
-      "nextMedia": "f5.2.2",
+      "voteAgain": false,
+      "nextMedia": "end_f5.2.2",
       "sympathy": -1
     }
   },
