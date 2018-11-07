@@ -1,131 +1,132 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>community client</title>
-    <script src="components/jquery/dist/jquery.min.js"></script>
-    <style>
-        html {
-            background-repeat: no-repeat;
-            background-size: cover;
-        }
+	<meta charset="UTF-8">
+	<title>Tower Dungeon Client</title>
+	<script src="components/jquery/dist/jquery.min.js"></script>
+	<style>
+	body {
+		background-repeat: no-repeat;
+		background-size: cover;
+		background-color: black;
+	}
 
-        #dummy {
-            padding-top: 35%;
-        }
+	body.active {
+		background-image: url(/images?image=client_background);
+	}
 
-        #answers {
-            width: 60%;
-            margin: 0 auto;
-            height: 100%;
-            display: none;
-        }
+	body.inactive {
+		background-image: url(/images?image=client_background_inactive);
+	}
 
-        #btn-yes, #btn-no, #btn-dummy {
-            width: 100%;
-            height: 100%;
-            padding-bottom: 36%;
-            background-size: 100%;
+	#answers {
+		width: 60%;
+		margin: 0 auto;
+		height: 100%;
+		display: none;
 
-            cursor: pointer;
-        }
+		position: absolute;
+		left: 0;
+		right: 0;
+		top: 27.5%;
+		bottom: 0;
+	}
 
-        #btn-dummy {
-            cursor: default;
-        }
+	#btn-yes {
+		background-image:url(/images?image=client_button_yes);
+	}
+	#btn-no {
+		background-image:url(/images?image=client_button_no);
+	}
+	#btn-yes, #btn-no {
+		width: 100%;
+		height: 25%;
+		background-size: 100%;
+		background-repeat: no-repeat;
 
-    </style>
-    <script>
-        var bgs = {};
-        bgs = {
-            background_active: '/images?image=client_background',
-            background_inactive: '/images?image=client_background_inactive'
-        };
-        var source;
-        var myId = null;
-        $("document").ready(function () {
-            $("html").css("background-image", 'url(' + bgs['background_active'] + ')');
-            $("html").css("background-image", 'url(' + bgs['background_inactive'] + ')');
-            $("#btn-yes").css("background-image", 'url(/images?image=client_button_yes)');
-            $("#btn-no").css("background-image", 'url(/images?image=client_button_no)');
+		cursor: pointer;
+	}
+</style>
+<script>
+	var source;
+	var deviceId = null;
 
-            connect();
-        });
-        $(window).on("beforeunload", function () {
-            $.post("/disconnect", {id:myId});
-            source.close();
-        });
-        if (!!window.EventSource) {
+	$("document").ready(function () {
+		if (!!window.EventSource) {
+			connect();
+		} else {
+			alert("Sorry, your browser does not work with this app. (EventSource not available)");
+		}
+	});
 
-            var eventCounter = 0;
+	$(window).on("beforeunload", function () {
+		$.post("/disconnect", {id:deviceId});
+		source.close();
+	});
 
+	var eventCounter = 0;
+	function connect() {
 
-            function connect() {
+		source = new EventSource("/events", {withCredentials: false});
+		
+		source.onmessage = function (event) {
 
-                source = new EventSource("/events", {withCredentials: false});
-                $('#connect').css('display', 'none');
+			var data = JSON.parse(event.data);
+			console.log("voting received.", event);
+			
+			if (data.eventNr > eventCounter) {
+				
+				if (event.type === 'open' || event.type === 'message') {
+					$('body').addClass('active').removeClass('inactive');
+				}
 
-                source.onmessage = function (event) {
-                    console.log("a new voting arrived!");
-                    var data = JSON.parse(event.data);
-                    console.log(event);
-                    if (data.eventNr > eventCounter) {
-                        if (event.type === 'open' || event.type === 'message') {
-                            $('html').css('background-image', 'url(' + bgs['background_active'] + ')');
-                        }
-                        //disabled because server interval stops after timeout
-                        //if (data.votingEnabled === true) {
-                        $('#answers').css('display', 'block');
-                        eventCounter = data.eventNr;
-                        startVoting(data.votingTime);
-                        //}
-                    }
-                };
-                source.addEventListener("id", function (event) {
-                    myId = JSON.parse(event.data).id;
-                });
-                source.onerror = function (err) {
-                    console.log(err);
-                    $.post("/disconnect", {id:myId});
-                };
+				$('#answers').css('display', 'block');
+				eventCounter = data.eventNr;
+				startVoting(data.votingTime);
 
-            }
+			}
+		};
 
-        } else {
-            alert("Sorry, your browser does not work with this app. (EventSource not available)");
-        }
-        function sendAnswer(answer) {
-            $.post('answer', {data: answer});
-            $('#answers').css('display', 'none');
-            $('html').css('background-image', 'url(' + bgs['background_inactive'] + ')');
-            timeCounter = 0;
-        }
-        var timeCounter;
-        function startVoting(time) {
-            timeCounter = 0;
-            var interval = setInterval(function () {
-                timeCounter++;
-                if (timeCounter == time) {
-                    $('html').css("background-image", 'url(' + bgs['background_inactive'] + ')');
-                    $('#answers').css('display', 'none');
-                    clearInterval(interval);
-                }
-            }, 1000);
-        }
-    </script>
+		source.addEventListener("id", function (event) {
+			deviceId = JSON.parse(event.data).id;
+		});
+
+		source.onerror = function (err) {
+			console.log(err);
+			$.post("/disconnect", {id:deviceId});
+		};
+
+	}
+
+	function sendAnswer(answer) {
+		$.post('answer', {data: answer});
+		$('#answers').hide();
+		$('body').addClass('inactive').removeClass('active');
+		timeCounter = 0;
+	}
+
+	var timeCounter;
+	function startVoting(time) {
+		timeCounter = 0;
+		var interval = setInterval(function () {
+			timeCounter++;
+			if (timeCounter == time) {
+				$('body').addClass('active').removeClass('inactive');
+				$('#answers').show();
+				clearInterval(interval);
+			}
+		}, 1000);
+	}        
+</script>
 </head>
-<body>
-<div id="dummy"></div>
-<div id="answers">
-    <a onclick="sendAnswer(0)">
-        <div id="btn-yes"></div>
-    </a>
-    <a>
-        <div id="btn-dummy"></div>
-    </a>
-    <a onclick="sendAnswer(1)">
-        <div id="btn-no"></div>
-    </a>
-</div>
+<body class="inactive">
+	<div id="answers">
+		<a onclick="sendAnswer(0)">
+			<div id="btn-yes"></div>
+		</a>
+		<a onclick="sendAnswer(1)">
+			<div id="btn-no"></div>
+		</a>
+	</div>
 </body>
 </html>

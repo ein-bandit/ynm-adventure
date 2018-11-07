@@ -30,7 +30,6 @@ function resetCurrentAnswers() {
 }
 
 var clientCounter = 0;
-//get files
 
 app.get('/index', function (req, res) {
     res.sendFile(path.join(__dirname, '/views', 'index.html'));
@@ -62,28 +61,23 @@ app.post('/disconnect', function (req, res) {
 
 app.get('/images', function (req, res) {
     var image = req.query.image;
-    console.log("fetching image " + image);
     res.sendFile(path.join(__dirname, '/public/images/' + image + ".png"));
 });
 
 app.get('/videos', function (req, res) {
     var video = req.query.video;
-    console.log("fetching video " + video);
     res.sendFile(path.join(__dirname, '/public/videos/' + video + ".mp4"));
 });
 
 app.post('/triggerVoting', function (req, res) {
     resetCurrentAnswers();
-    console.log("trigger req body " + req.body);
     var votingTime = parseInt(req.body['votingTime']);
 
     sendEventRes(parseInt(req.body['mediaCounter']), votingTime);
-    console.log("starting voting");
     //res.setHeader('Cache-Control','no-cache');
 
     setTimeout(function () {
         sendVoteData();
-        //console.log("voting time finished");
     }, (votingTime * 1000) + 3000);
     res.sendStatus(200);
 });
@@ -102,7 +96,6 @@ app.get('/updates', function (req, res) {
     indexRes = res;
 
     masterInterval = setInterval(function () {
-        //console.log("sending ping event to index.");
         res.write("event: ping\n");
         res.write("data: {}\n\n");
     }, 25000);
@@ -161,34 +154,21 @@ app.post('/answer', function (req, res) {
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
-    var err = new Error('Not Found');
+    var err = {};
     err.status = 404;
     next(err);
 });
 
 // error handlers
 
-// development error handler
 // will print stacktrace
-if (app.get('env') === 'development') {
-    app.use(function (err, req, res, next) {
-        res.status(err.status || 500);
-        res.render('error', {
-            message: err.message,
-            error: err
-        });
-    });
-}
-
-// production error handler
-// no stacktraces leaked to user
 app.use(function (err, req, res, next) {
     res.status(err.status || 500);
     res.render('error', {
-        message: err.message,
+        title: 'Tower Dungeon Community',
+        message: 'Ooops, wrong endpoint.\nAdd /client or /index to URL',
         error: {}
     });
 });
-
 
 module.exports = app;

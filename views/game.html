@@ -4,43 +4,69 @@
     <meta charset="UTF-8">
     <title>community master/server</title>
     <style>
-        body {
-            background-image: url(/images?image=game_BG_tiled_small);
-            background-repeat: repeat;
+    body {
+        background-image: url(/images?image=game_BG_tiled_small);
+        background-repeat: repeat;
 
-            color: white !important;
-        }
+        color: white !important;
+    }
 
-        button {
-            color: black !important;
-        }
+    button {
+        color: black !important;
+    }
 
-        #video {
-            width: 1024px;
-            height: 576px;
-        }
-    </style>
-    <link rel="stylesheet" href="components/bootstrap/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="components/bootstrap/dist/css/bootstrap-theme.min.css">
-    <script src="components/jquery/dist/jquery.min.js"></script>
-    <script src="components/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script>
-        $.ajaxSetup({cache: false});
+    #answers {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 5%;
+        display:none; 
+        width:1024px; 
+        margin:0 auto;
+    }
 
-        var audioMuted = false;
+    .video-container {
+        width:1024px; 
+        margin:0 auto;
+    }
+    .video-container-inner {
+        height:768px; 
+        vertical-align: middle; 
+        display:table-cell;
+    }
 
-        var search = window.location.search;
-        var debug = false;
-        if (search.indexOf("&") != -1) {
-            search = search.split("&");
-            var param1 = search[0].split("=");
-            var param2 = search[1].split("=");
-            param1 = param1[1];
-            param2 = parseInt(param2[1]);
-            debug = true;
-        }
+    .progess .progress-bar {
+        width: 50%;
+    }
 
-        var source = new EventSource("/updates", {withCredentials: false});
+    #video {
+        width: 1024px;
+        height: 576px;
+    }
+</style>
+
+<link rel="stylesheet" href="components/bootstrap/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="components/bootstrap/dist/css/bootstrap-theme.min.css">
+<script src="components/jquery/dist/jquery.min.js"></script>
+<script src="components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+<script>
+    $.ajaxSetup({cache: false});
+
+    var audioMuted = false;
+
+    var search = window.location.search;
+    var debug = false;
+    if (search.indexOf("&") != -1) {
+        search = search.split("&");
+        var param1 = search[0].split("=");
+        var param2 = search[1].split("=");
+        param1 = param1[1];
+        param2 = parseInt(param2[1]);
+        debug = true;
+    }
+
+    var source = new EventSource("/updates", {withCredentials: false});
 
         //mediacounter is passed to client, so only for current event can be voted.
         var mediaCounter = 1;
@@ -55,7 +81,7 @@
 
         $.get("/data").then(function (data) {
             gameData = data;
-            console.log(gameData);
+            console.log("retrieved game data", gameData);
             if (currentStateId.length == 0) {
                 currentStateId = gameData.start;
             }
@@ -73,8 +99,6 @@
             console.log("ping event received");
         });
 
-
-        var voteLoopGard = false;
         source.addEventListener("vote", function (event) {
 
             var data = JSON.parse(event.data);
@@ -86,13 +110,15 @@
             $("#answers-no").text(data.answers.no);
 
             $("#answers").show();
-            //$("#voting").hide();
+
             //blocks the process for 5 seconds and continues with evaluation -> next video.
             setTimeout(function () {
 
                 $("#answers").hide();
+
                 var current;
                 var finalAnswer = "";
+
                 if (parseInt($("#answers-yes").css("width")) > 65) {
                     current = gameData[currentStateId].yes;
                     finalAnswer = "yes";
@@ -103,6 +129,7 @@
                     current = gameData[currentStateId].maybe;
                     finalAnswer = "maybe";
                     if (current.voteAgain === true) {
+                        //same video, leave state as is and play.
                         setTimeout(function() {
                             startNextVideo(current.nextMedia);
                         }, 5000);
@@ -111,39 +138,41 @@
                         currentStateId = current.nextMedia;
                     }
                 }
+
                 if (gameData[currentStateId][finalAnswer].nextMedia.indexOf("end_") != -1) {
                     calcAndPlayEnd(finalAnswer, gameData[currentStateId][finalAnswer].nextMedia);
-                    return;
+                } else {
+                    currentStateId = current.nextMedia;
+                    _sympathy = _sympathy + current.sympathy;
+
+                    $("#answers-yes").css("width", "50%");
+                    $("#answers-no").css("width", "50%");
+
+                    startNextVideo(currentStateId);                    
                 }
-                currentStateId = current.nextMedia;
-                _sympathy = _sympathy + current.sympathy;
-
-                $("#answers-yes").css("width", "50%");
-                $("#answers-no").css("width", "50%");
-
-                startNextVideo(currentStateId);
 
             }, 5000);
 
         }, false);
 
+        //tell server a voting starts now.
         function startVoting(votingTime) {
-            console.log("start voting: " + mediaCounter);
+            console.log("start voting", mediaCounter);
             $.post('/triggerVoting', {
                 mediaCounter: mediaCounter++,
                 votingTime: votingTime
             });
-            //$("#voting").show()
         }
+
         function startNextVideo(video, final) {
-            console.log("start video: " + video);
+            console.log("starting video", video);
             $("#videoSource").attr("src", "/videos?video=" + video);
             $("#video").load();
             $("#video").get(0).play();
-            if (audioMuted === true) {
-                muteOrUnmuteAudio();
-            }
-            console.log("video started");
+            
+            //mute again if key was pressed before.
+            muteOrUnmuteAudio();
+            
             $("#video").bind("ended", function (event) {
                 console.log("video ended");
                 $('video').unbind('ended');
@@ -152,12 +181,15 @@
                 }
             });
         }
+
         function muteOrUnmuteAudio() {
             $("#video").prop('muted', audioMuted);
         }
+
         function calcAndPlayEnd(finalAnswer, nextMedia) {
             var finalVideo = "";
-            console.log(_sympathy);
+            console.log("final sympathy", _sympathy);
+
             if (finalAnswer === "no") {
                 if (_sympathy >= 0) {
                     var temp1 = nextMedia.split(",")[0];
@@ -169,29 +201,28 @@
             } else {
                 finalVideo = nextMedia.substring(4, nextMedia.length);
             }
-            console.log("showing final video");
+
+            console.log("show final video");
             startNextVideo(finalVideo, true);
         }
     </script>
 </head>
 <body>
-<div id="voting" style="display:none">voting started!</div>
-<div style="width:1024px; margin:0 auto;">
-    <div style="height:820px; vertical-align: middle; display:table-cell">
-        <video id="video" preload="auto">
-            <source id="videoSource" src="" type="video/mp4"/>
-        </video>
+    <div class="video-container" style="">
+        <div class="video-container-inner">
+            <video id="video" preload="auto">
+                <source id="videoSource" src="" type="video/mp4"/>
+            </video>
+        </div>
     </div>
-</div>
 
-<div class="progress" id="answers" style="display:none; width:1024px; margin:0 auto; padding-top:-20%">
-    <div class="progress-bar progress-bar-danger" id="answers-yes" style="width: 50%">
-        <span class="sr-only">50%</span>
+    <div class="progress" id="answers">
+        <div class="progress-bar progress-bar-danger" id="answers-yes">
+            <span class="sr-only">50%</span>
+        </div>
+        <div class="progress-bar progress-bar" id="answers-no">
+            <span class="sr-only">50%</span>
+        </div>
     </div>
-    <div class="progress-bar progress-bar" id="answers-no" style="width: 50%">
-        <span class="sr-only">50%</span>
-    </div>
-</div>
-
 </body>
 </html>
